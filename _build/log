@@ -1,9 +1,9 @@
 # dune build
 # OCAMLPARAM: unset
 # Shared cache: disabled
-# Workspace root: /Users/vinnie/Desktop/sp23/cs3110/3110-final
+# Workspace root: /Users/liamdu/cs3110/cs3110sp23/3110-final
 # Auto-detected concurrency: 8
-$ /Users/vinnie/.opam/cs3110-2023sp/bin/ocamlc.opt -config > /var/folders/21/q9k9z2d92hg81r7p1ct_w9tm0000gn/T/dune_f98651_output
+$ /Users/liamdu/.opam/cs3110-2022fa/bin/ocamlc.opt -config > /var/folders/w8/kjxmzl2s3_gbfbt2wks04s6r0000gn/T/dune_3f5ed3_output
 # Dune context:
 #  { name = "default"
 #  ; kind = "default"
@@ -13,41 +13,41 @@ $ /Users/vinnie/.opam/cs3110-2023sp/bin/ocamlc.opt -config > /var/folders/21/q9k
 #  ; fdo_target_exe = None
 #  ; build_dir = In_build_dir "default"
 #  ; toplevel_path =
-#      Some External "/Users/vinnie/.opam/cs3110-2023sp/lib/toplevel"
-#  ; ocaml_bin = External "/Users/vinnie/.opam/cs3110-2023sp/bin"
-#  ; ocaml = Ok External "/Users/vinnie/.opam/cs3110-2023sp/bin/ocaml"
-#  ; ocamlc = External "/Users/vinnie/.opam/cs3110-2023sp/bin/ocamlc.opt"
+#      Some External "/Users/liamdu/.opam/cs3110-2022fa/lib/toplevel"
+#  ; ocaml_bin = External "/Users/liamdu/.opam/cs3110-2022fa/bin"
+#  ; ocaml = Ok External "/Users/liamdu/.opam/cs3110-2022fa/bin/ocaml"
+#  ; ocamlc = External "/Users/liamdu/.opam/cs3110-2022fa/bin/ocamlc.opt"
 #  ; ocamlopt =
-#      Ok External "/Users/vinnie/.opam/cs3110-2023sp/bin/ocamlopt.opt"
+#      Ok External "/Users/liamdu/.opam/cs3110-2022fa/bin/ocamlopt.opt"
 #  ; ocamldep =
-#      Ok External "/Users/vinnie/.opam/cs3110-2023sp/bin/ocamldep.opt"
+#      Ok External "/Users/liamdu/.opam/cs3110-2022fa/bin/ocamldep.opt"
 #  ; ocamlmklib =
-#      Ok External "/Users/vinnie/.opam/cs3110-2023sp/bin/ocamlmklib.opt"
+#      Ok External "/Users/liamdu/.opam/cs3110-2022fa/bin/ocamlmklib.opt"
 #  ; env =
 #      map
-#        { "DUNE_OCAML_HARDCODED" : "/Users/vinnie/.opam/cs3110-2023sp/lib"
-#        ; "DUNE_OCAML_STDLIB" : "/Users/vinnie/.opam/cs3110-2023sp/lib/ocaml"
-#        ; "DUNE_SOURCEROOT" : "/Users/vinnie/Desktop/sp23/cs3110/3110-final"
+#        { "DUNE_OCAML_HARDCODED" : "/Users/liamdu/.opam/cs3110-2022fa/lib"
+#        ; "DUNE_OCAML_STDLIB" : "/Users/liamdu/.opam/cs3110-2022fa/lib/ocaml"
+#        ; "DUNE_SOURCEROOT" : "/Users/liamdu/cs3110/cs3110sp23/3110-final"
 #        ; "INSIDE_DUNE" :
-#            "/Users/vinnie/Desktop/sp23/cs3110/3110-final/_build/default"
+#            "/Users/liamdu/cs3110/cs3110sp23/3110-final/_build/default"
 #        ; "OCAMLFIND_IGNORE_DUPS_IN" :
-#            "/Users/vinnie/Desktop/sp23/cs3110/3110-final/_build/install/default/lib"
+#            "/Users/liamdu/cs3110/cs3110sp23/3110-final/_build/install/default/lib"
 #        ; "OCAMLPATH" :
-#            "/Users/vinnie/Desktop/sp23/cs3110/3110-final/_build/install/default/lib"
+#            "/Users/liamdu/cs3110/cs3110sp23/3110-final/_build/install/default/lib"
 #        ; "OCAMLTOP_INCLUDE_PATH" :
-#            "/Users/vinnie/Desktop/sp23/cs3110/3110-final/_build/install/default/lib/toplevel"
+#            "/Users/liamdu/cs3110/cs3110sp23/3110-final/_build/install/default/lib/toplevel"
 #        ; "OCAML_COLOR" : "always"
 #        ; "OPAMCOLOR" : "always"
 #        }
-#  ; findlib_paths = [ External "/Users/vinnie/.opam/cs3110-2023sp/lib" ]
+#  ; findlib_paths = [ External "/Users/liamdu/.opam/cs3110-2022fa/lib" ]
 #  ; arch_sixtyfour = true
 #  ; natdynlink_supported = true
 #  ; supports_shared_libraries = true
 #  ; ocaml_config =
 #      { version = "4.14.0"
 #      ; standard_library_default =
-#          "/Users/vinnie/.opam/cs3110-2023sp/lib/ocaml"
-#      ; standard_library = "/Users/vinnie/.opam/cs3110-2023sp/lib/ocaml"
+#          "/Users/liamdu/.opam/cs3110-2022fa/lib/ocaml"
+#      ; standard_library = "/Users/liamdu/.opam/cs3110-2022fa/lib/ocaml"
 #      ; standard_runtime = "the_standard_runtime_variable_was_deleted"
 #      ; ccomp_type = "cc"
 #      ; c_compiler = "cc"
@@ -93,8 +93,8 @@ $ /Users/vinnie/.opam/cs3110-2023sp/bin/ocamlc.opt -config > /var/folders/21/q9k
 #      ; os_type = "Unix"
 #      ; default_executable_name = "a.out"
 #      ; systhread_supported = true
-#      ; host = "aarch64-apple-darwin22.2.0"
-#      ; target = "aarch64-apple-darwin22.2.0"
+#      ; host = "aarch64-apple-darwin21.1.0"
+#      ; target = "aarch64-apple-darwin21.1.0"
 #      ; profiling = false
 #      ; flambda = false
 #      ; spacetime = false
@@ -114,11 +114,11 @@ $ /Users/vinnie/.opam/cs3110-2023sp/bin/ocamlc.opt -config > /var/folders/21/q9k
 #      ; windows_unicode = false
 #      }
 #  }
-$ (cd _build/default && /Users/vinnie/.opam/cs3110-2023sp/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -bin-annot -I src/.allchat.eobjs/byte -no-alias-deps -opaque -o src/.allchat.eobjs/byte/dune__exe__Allchat.cmi -c -intf src/allchat.mli)
-$ (cd _build/default && /Users/vinnie/.opam/cs3110-2023sp/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -bin-annot -I test/.main.objs/byte -no-alias-deps -opaque -o test/.main.objs/byte/main.cmo -c -impl test/main.ml)
-$ (cd _build/default && /Users/vinnie/.opam/cs3110-2023sp/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -a -o test/main.cma test/.main.objs/byte/main.cmo)
-$ (cd _build/default && /Users/vinnie/.opam/cs3110-2023sp/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -I test/.main.objs/byte -I test/.main.objs/native -intf-suffix .ml -no-alias-deps -opaque -o test/.main.objs/native/main.cmx -c -impl test/main.ml)
-$ (cd _build/default && /Users/vinnie/.opam/cs3110-2023sp/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -I src/.allchat.eobjs/byte -I src/.allchat.eobjs/native -intf-suffix .ml -no-alias-deps -opaque -o src/.allchat.eobjs/native/dune__exe__Allchat.cmx -c -impl src/allchat.ml)
-$ (cd _build/default && /Users/vinnie/.opam/cs3110-2023sp/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -a -o test/main.cmxa test/.main.objs/native/main.cmx)
-$ (cd _build/default && /Users/vinnie/.opam/cs3110-2023sp/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -shared -linkall -I test -o test/main.cmxs test/main.cmxa)
-$ (cd _build/default && /Users/vinnie/.opam/cs3110-2023sp/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -o src/allchat.exe src/.allchat.eobjs/native/dune__exe__Allchat.cmx)
+$ (cd _build/default && /Users/liamdu/.opam/cs3110-2022fa/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -bin-annot -I src/.allchat.eobjs/byte -no-alias-deps -opaque -o src/.allchat.eobjs/byte/dune__exe__Allchat.cmi -c -intf src/allchat.mli)
+$ (cd _build/default && /Users/liamdu/.opam/cs3110-2022fa/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -bin-annot -I test/.main.objs/byte -no-alias-deps -opaque -o test/.main.objs/byte/main.cmo -c -impl test/main.ml)
+$ (cd _build/default && /Users/liamdu/.opam/cs3110-2022fa/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -a -o test/main.cma test/.main.objs/byte/main.cmo)
+$ (cd _build/default && /Users/liamdu/.opam/cs3110-2022fa/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -I test/.main.objs/byte -I test/.main.objs/native -intf-suffix .ml -no-alias-deps -opaque -o test/.main.objs/native/main.cmx -c -impl test/main.ml)
+$ (cd _build/default && /Users/liamdu/.opam/cs3110-2022fa/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -I src/.allchat.eobjs/byte -I src/.allchat.eobjs/native -intf-suffix .ml -no-alias-deps -opaque -o src/.allchat.eobjs/native/dune__exe__Allchat.cmx -c -impl src/allchat.ml)
+$ (cd _build/default && /Users/liamdu/.opam/cs3110-2022fa/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -a -o test/main.cmxa test/.main.objs/native/main.cmx)
+$ (cd _build/default && /Users/liamdu/.opam/cs3110-2022fa/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -o src/allchat.exe src/.allchat.eobjs/native/dune__exe__Allchat.cmx)
+$ (cd _build/default && /Users/liamdu/.opam/cs3110-2022fa/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -shared -linkall -I test -o test/main.cmxs test/main.cmxa)
