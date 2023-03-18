@@ -1,17 +1,17 @@
 {
-  "word list": [
+  "word_list": [
     {
       "word": "string",
-      "part of speech": "object",
-      "connatation": "object"
+      "part_of_speech": "object",
+      "connotation": "object"
     }
   ],
-  "sentence list": [
+  "sentence_list": [
     {
       "sentence": "string",
-      "expected pos": "object",
-      "connatation": "object",
-      "internal representation": "string list"
+      "expected_pos": "object",
+      "connotation": "object",
+      "internal_representation": "string list"
     }
   ]
 }

@@ -8,7 +8,7 @@ type part_of_speech =
   | Noun
   | Verb
 
-type connatation =
+type connotation =
   | Positive
   | Neutral
   | Negative
@@ -16,13 +16,13 @@ type connatation =
 type word = {
   term : string;
   part_of_speech : part_of_speech;
-  connatation : connatation;
+  connotation : connotation;
 }
 
 type sentence = {
   sentence : string;
   expected_pos : part_of_speech;
-  connatation : connatation;
+  connotation : connotation;
   internal_representation : string list;
 }
 

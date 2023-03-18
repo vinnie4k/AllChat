@@ -1,42 +1,42 @@
 {
-  "word list": [
+  "word_list": [
     {
       "word": "curious",
-      "part of speech": "adjective",
-      "connatation": "positive"
+      "part_of_speech": "adjective",
+      "connotation": "positive"
     },
     {
       "word": "bubbly",
-      "part of speech": "adjective",
-      "connatation": "positive"
+      "part_of_speech": "adjective",
+      "connotation": "positive"
     },
     {
       "word": "iron",
-      "part of speech": "noun",
-      "connatation": "neutral"
+      "part_of_speech": "noun",
+      "connotation": "neutral"
     },
     {
       "word": "running",
-      "part of speech": "verb",
-      "connatation": "neutral"
+      "part_of_speech": "verb",
+      "connotation": "neutral"
     },
     {
       "word": "punching",
-      "part of speech": "verb",
-      "connatation": "negative"
+      "part_of_speech": "verb",
+      "connotation": "negative"
     },
     {
       "word": "bored",
-      "part of speech": "adjective",
-      "connatation": "negative"
+      "part_of_speech": "adjective",
+      "connotation": "negative"
     }
   ],
-  "sentence list": [
+  "sentence_list": [
     {
       "sentence": "I was ___ down the street.",
-      "expected pos": "verb",
-      "connatation": "neutral",
-      "internal representation": [
+      "expected_pos": "verb",
+      "connotation": "neutral",
+      "internal_representation": [
         "I was ",
         " down the street."
       ]
