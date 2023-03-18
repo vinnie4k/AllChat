@@ -1,2 +1,3 @@
 (executable
- (name allchat))
+ (name allchat)
+ (libraries yojson ANSITerminal))
