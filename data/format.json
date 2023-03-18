@@ -1,0 +1,17 @@
+{
+  "word list": [
+    {
+      "word": "string",
+      "part of speech": "object",
+      "connatation": "object"
+    }
+  ],
+  "sentence list": [
+    {
+      "sentence": "string",
+      "expected pos": "object",
+      "connatation": "object",
+      "internal representation": "string list"
+    }
+  ]
+}

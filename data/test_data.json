@@ -1,0 +1,45 @@
+{
+  "word list": [
+    {
+      "word": "curious",
+      "part of speech": "adjective",
+      "connatation": "positive"
+    },
+    {
+      "word": "bubbly",
+      "part of speech": "adjective",
+      "connatation": "positive"
+    },
+    {
+      "word": "iron",
+      "part of speech": "noun",
+      "connatation": "neutral"
+    },
+    {
+      "word": "running",
+      "part of speech": "verb",
+      "connatation": "neutral"
+    },
+    {
+      "word": "punching",
+      "part of speech": "verb",
+      "connatation": "negative"
+    },
+    {
+      "word": "bored",
+      "part of speech": "adjective",
+      "connatation": "negative"
+    }
+  ],
+  "sentence list": [
+    {
+      "sentence": "I was ___ down the street.",
+      "expected pos": "verb",
+      "connatation": "neutral",
+      "internal representation": [
+        "I was ",
+        " down the street."
+      ]
+    }
+  ]
+}
