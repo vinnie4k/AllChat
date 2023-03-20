@@ -26,3 +26,10 @@ val add_words : t -> string -> string list -> string
     blanks of [s] if s is from word_repo[j] and outputs a string. Example:
     [add_words "I was ___ down the street." \["bored"\]] is
     ["I was bored down the street."] *)
+
+val calculate_score : t -> string -> string list -> int list
+(** [calculate_score j s lst] gets an int list that represents the score for
+    each of the words from word list[lst] using sentence[s] from the
+    word_repo[j]. Example:
+    [calculate_score test_data "I was ___ down the street." \[“bored”, “iron”\]]
+    returns [62, 75] *)

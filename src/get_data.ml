@@ -31,6 +31,8 @@ type t = {
   sentences : sentence list;
 }
 
+exception InvalidWords of word list
+
 (** helper functions for from_json *)
 let match_pos str =
   match str with
@@ -76,8 +78,8 @@ let rec get_word_helper repo int str_lst =
     get_word_helper repo (int - 1) (word.term :: str_lst)
 
 (** get_word function *)
-(** currently this function could choose the same word twice!!!!! *)
 let rec get_word repo int = get_word_helper repo int []
+(* currently this function could choose the same word twice!!!!! *)
 
 (** get_sentence function *)
 let get_sentence repo =
@@ -87,19 +89,18 @@ let get_sentence repo =
   sentence.sentence
 
 (** helper function for get_blanks *)
-let rec get_blanks_helper lst sentence = 
+let rec get_blanks_helper lst sentence =
   match lst with
   | [] -> raise (InvalidSentence sentence)
-  | h :: t -> if h.sentence = sentence 
-                then List.length h.internal_representation - 1 
-                else get_blanks_helper t sentence
+  | h :: t ->
+      if h.sentence = sentence then List.length h.internal_representation - 1
+      else get_blanks_helper t sentence
 
 (** get_blanks function *)
-let get_blanks repo sentence =
-  get_blanks_helper repo.sentences sentence
+let get_blanks repo sentence = get_blanks_helper repo.sentences sentence
 
 (** helper function for add_words *)
-let rec alternate_lst lst1 lst2 lst3 = 
+let rec alternate_lst lst1 lst2 lst3 =
   match lst1 with
   | [] -> lst3
   | h :: t -> alternate_lst lst2 t (h :: lst3)
@@ -107,10 +108,62 @@ let rec alternate_lst lst1 lst2 lst3 =
 let rec add_words_helper lst sentence word =
   match lst with
   | [] -> raise (InvalidSentence sentence)
-  | h :: t -> if h.sentence = sentence 
-                then alternate_lst h.internal_representation word [] |> List.rev
-                else add_words_helper t sentence word
+  | h :: t ->
+      if h.sentence = sentence then
+        alternate_lst h.internal_representation word [] |> List.rev
+      else add_words_helper t sentence word
 
 (** add_words function *)
 let add_words repo sentence word =
   add_words_helper repo.sentences sentence word |> List.hd
+
+(* need to check both word and sentence are part of the word_repo before
+   calculating the score *)
+let rec wordin_word_repo words word =
+  match words with
+  | [] -> false
+  | h :: t -> if h.term = word then true else wordin_word_repo t word
+
+let rec check_all_words repo lst =
+  match lst with
+  | [] -> true
+  | h :: t ->
+      if wordin_word_repo repo.words h.term then check_all_words repo t
+      else false
+
+let rec sentencein_word_repo sentences sentence =
+  match sentences with
+  | [] -> false
+  | h :: t ->
+      if h.sentence = sentence then true else sentencein_word_repo t sentence
+
+(** helper function for calculate_score *)
+let score_matching sen_pos word_pos sen_con word_con =
+  if sen_pos = word_pos && sen_con = word_con then 0
+  else if sen_pos <> word_pos && sen_con = word_con then 25
+  else if sen_pos = word_pos && sen_con <> word_con then 25
+  else 50
+
+let calculate repo sentence word =
+  let sentence_prop =
+    List.filter (fun x -> x.sentence = sentence) repo.sentences
+  in
+  let word_prop = List.filter (fun x -> x = word) repo.words in
+  score_matching (List.hd sentence_prop).expected_pos
+    (List.hd word_prop).part_of_speech (List.hd sentence_prop).connotation
+    (List.hd word_prop).connotation
+
+let rec calculate_score_helper repo sentence words scores =
+  match words with
+  | [] -> scores
+  | h :: t ->
+      calculate_score_helper repo sentence t
+        ((100 - calculate repo sentence h) :: scores)
+
+(* does not consider when words is empty *)
+
+let calculate_score repo sentence words =
+  if Bool.not (check_all_words repo words) then raise (InvalidWords words)
+  else if Bool.not (sentencein_word_repo repo.sentences sentence) then
+    raise (InvalidSentence sentence)
+  else calculate_score_helper repo sentence words []
