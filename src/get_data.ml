@@ -1,5 +1,8 @@
 open Yojson.Basic.Util
 
+exception UnknownWord of string
+exception UnknownSentence of string
+
 type part_of_speech =
   | Adjective
   | Noun
@@ -65,11 +68,7 @@ let from_json json =
       json |> member "sentence_list" |> to_list |> List.map sentence_of_json;
   }
 
-(* currently this function could choose the same word twice!!!!! *)
-
 (** helper function for get_word *)
-let str_lst = []
-
 let rec get_word_helper repo int str_lst =
   if int = 0 then str_lst
   else
@@ -77,11 +76,40 @@ let rec get_word_helper repo int str_lst =
     get_word_helper repo (int - 1) (word.term :: str_lst)
 
 (** get_word function *)
-let rec get_word repo int = get_word_helper repo int str_lst
+(** currently this function could choose the same word twice!!!!! *)
+let rec get_word repo int = get_word_helper repo int []
 
 (** get_sentence function *)
 let get_sentence repo =
   let sentence =
     List.length repo.sentences |> Random.int |> List.nth repo.sentences
   in
-  List.cons sentence []
+  sentence.sentence
+
+(** helper function for get_blanks *)
+let rec get_blanks_helper lst sentence = 
+  match lst with
+  | [] -> raise (UnknownSentence sentence)
+  | h :: t -> if h.sentence = sentence 
+                then List.length h.internal_representation - 1 
+                else get_blanks_helper t sentence
+
+(** get_blanks function *)
+let get_blanks repo sentence =
+  get_blanks_helper repo.sentences sentence
+
+(** helper function for add_words *)
+let rec alternate_lst lst1 lst2 lst3 = 
+  match lst1 with
+  | [] -> lst3
+  | h :: t -> alternate_lst lst2 t (h :: lst3)
+  let rec add_words_helper lst sentence word =
+  match lst with
+  | [] -> raise (UnknownSentence sentence)
+  | h :: t -> if h.sentence = sentence 
+                then alternate_lst h.internal_representation word [] |> List.rev
+                else add_words_helper t sentence word
+
+(** add_words function *)
+let add_words repo sentence word =
+  add_words_helper repo.sentences sentence word |> List.hd
