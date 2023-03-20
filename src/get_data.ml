@@ -137,13 +137,14 @@ let rec sentencein_word_repo sentences sentence =
   | h :: t ->
       if h.sentence = sentence then true else sentencein_word_repo t sentence
 
-(** helper function for calculate_score *)
+(** calculations for a word *)
 let score_matching sen_pos word_pos sen_con word_con =
   if sen_pos = word_pos && sen_con = word_con then 0
   else if sen_pos <> word_pos && sen_con = word_con then 25
   else if sen_pos = word_pos && sen_con <> word_con then 25
   else 50
 
+(** return the calculations for a word *)
 let calculate repo sentence word =
   let sentence_prop =
     List.filter (fun x -> x.sentence = sentence) repo.sentences
@@ -153,15 +154,16 @@ let calculate repo sentence word =
     (List.hd word_prop).part_of_speech (List.hd sentence_prop).connotation
     (List.hd word_prop).connotation
 
+(** gets the list of all the scores *)
 let rec calculate_score_helper repo sentence words scores =
   match words with
   | [] -> scores
   | h :: t ->
       calculate_score_helper repo sentence t
         ((100 - calculate repo sentence h) :: scores)
+(* does not consider when words is empty!!!! *)
 
-(* does not consider when words is empty *)
-
+(** calculate_score function *)
 let calculate_score repo sentence words =
   if Bool.not (check_all_words repo words) then raise (InvalidWords words)
   else if Bool.not (sentencein_word_repo repo.sentences sentence) then
