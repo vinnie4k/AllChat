@@ -28,6 +28,7 @@ type t = {
   sentences : sentence list;
 }
 
+(** helper functions for from_json *)
 let match_pos str =
   match str with
   | v ->
@@ -56,9 +57,31 @@ let sentence_of_json json =
       json |> member "internal_representation" |> to_list |> List.map to_string;
   }
 
+(** from_json function *)
 let from_json json =
   {
     words = json |> member "word_list" |> to_list |> List.map word_of_json;
     sentences =
       json |> member "sentence_list" |> to_list |> List.map sentence_of_json;
   }
+
+(* currently this function could choose the same word twice!!!!! *)
+
+(** helper function for get_word *)
+let str_lst = []
+
+let rec get_word_helper repo int str_lst =
+  if int = 0 then str_lst
+  else
+    let word = List.length repo.words |> Random.int |> List.nth repo.words in
+    get_word_helper repo (int - 1) (word.term :: str_lst)
+
+(** get_word function *)
+let rec get_word repo int = get_word_helper repo int str_lst
+
+(** get_sentence function *)
+let get_sentence repo =
+  let sentence =
+    List.length repo.sentences |> Random.int |> List.nth repo.sentences
+  in
+  List.cons sentence []
