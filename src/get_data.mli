@@ -15,13 +15,14 @@ val get_sentence : t -> string
     [get_sentence test_data] is ["I was ___ down the street."] because that is a
     sentence from the words_repo test_data. *)
 
-val get_blanks : string -> int
-(** [get_blanks s] gets an int based on the number of blanks ["___"] in the
-    string [s]. Example: [get_blanks "I was ___ down the street."] is [1]
-    because there is 1 blank in the sentence. *)
+val get_blanks : t -> string -> int
+(** [get_blanks j s] gets an int based on the number of blanks ["___"] in the
+    string [s] if s is from word_repo[j]. Example:
+    [get_blanks "I was ___ down the street."] is [1] because there is 1 blank in
+    the sentence. *)
 
-val add_words : string -> string list -> string
-(** [add_words s lst] gets a string by adding the elements from [lst] into the
-    blanks of [s] and outputs a string. Example:
+val add_words : t -> string -> string list -> string
+(** [add_words j s lst] gets a string by adding the elements from [lst] into the
+    blanks of [s] if s is from word_repo[j] and outputs a string. Example:
     [add_words "I was ___ down the street." \["bored"\]] is
     ["I was bored down the street."] *)
