@@ -1,7 +1,7 @@
 open Yojson.Basic.Util
 
-exception UnknownWord of string
-exception UnknownSentence of string
+exception InvalidWord of string
+exception InvalidSentence of string
 
 type part_of_speech =
   | Adjective
@@ -89,7 +89,7 @@ let get_sentence repo =
 (** helper function for get_blanks *)
 let rec get_blanks_helper lst sentence = 
   match lst with
-  | [] -> raise (UnknownSentence sentence)
+  | [] -> raise (InvalidSentence sentence)
   | h :: t -> if h.sentence = sentence 
                 then List.length h.internal_representation - 1 
                 else get_blanks_helper t sentence
@@ -103,10 +103,10 @@ let rec alternate_lst lst1 lst2 lst3 =
   match lst1 with
   | [] -> lst3
   | h :: t -> alternate_lst lst2 t (h :: lst3)
-  
+
 let rec add_words_helper lst sentence word =
   match lst with
-  | [] -> raise (UnknownSentence sentence)
+  | [] -> raise (InvalidSentence sentence)
   | h :: t -> if h.sentence = sentence 
                 then alternate_lst h.internal_representation word [] |> List.rev
                 else add_words_helper t sentence word
