@@ -103,7 +103,8 @@ let rec alternate_lst lst1 lst2 lst3 =
   match lst1 with
   | [] -> lst3
   | h :: t -> alternate_lst lst2 t (h :: lst3)
-  let rec add_words_helper lst sentence word =
+  
+let rec add_words_helper lst sentence word =
   match lst with
   | [] -> raise (UnknownSentence sentence)
   | h :: t -> if h.sentence = sentence 
