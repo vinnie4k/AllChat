@@ -1,3 +1,4 @@
+open Allchat
 open Profile
 
 (*checks if words inputted are actually from the word bank*)
@@ -19,11 +20,15 @@ type input_success = {
   success : bool;
 }
 
+let data_dir_prefix = "data" ^ Filename.dir_sep
+let test = Yojson.Basic.from_file (data_dir_prefix ^ "test_data.json")
+let test_json = Get_data.from_json test
+
 let askforwords (bank : string list) (sentence : string) =
   (*print instructions*)
   let input = parse (read_line ()) in
   if valid_words input bank then
-    { message = Get_data.add_words sentence input; success = true }
+    { message = Get_data.add_words test_json sentence input; success = true }
   else
     {
       message = "Please input the appropriate number of words from the bank";
@@ -39,7 +44,10 @@ let rec try_again_turn bank sentence =
 let rec one_player_turn player bank sentence next =
   print_endline (Player.get_player_name player ^ "'s turn:\n");
   print_endline (sentence ^ "\n");
-  print_endline "Fill in " ^ Get_data.get_blanks sentence ^ "blanks using:\n";
+  print_endline
+    ("Fill in "
+    ^ (Get_data.get_blanks test_json sentence |> string_of_int)
+    ^ "blanks using:\n");
   print_endline (strlst_to_str bank);
   print_string "> ";
   let succ = askforwords bank sentence in
