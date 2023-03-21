@@ -1,5 +1,8 @@
 open Profile
 
+let data_dir_prefix = "data" ^ Filename.dir_sep
+let words_and_sentences = Yojson.Basic.from_file (data_dir_prefix ^ "test_data.json")
+
 (*checks if words inputted are actually from the word bank*)
 let rec valid_words request bank =
   match request with
@@ -23,12 +26,31 @@ let askforwords (bank : string list) (sentence : string) =
   (*print instructions*)
   let input = parse (read_line ()) in
   if valid_words input bank then
-    { message = Get_data.add_words sentence input; success = true }
+    { message = Get_data.add_words input sentence; success = true }
   else
     {
       message = "Please input the appropriate number of words from the bank";
       success = false;
     }
+
+
+
+(*handling player count at game start*)    
+let num_players = print_endline "How many people are playing?";
+  print_endline "> ";
+  ref (int_of_string (read_line ()))
+let player_list = Array.make !num_players (Player.new_player "|*_*|")
+let request_player_name p = 
+  print_endline ("Enter name of Player #"^ (string_of_int p));
+  print_endline "> ";
+  new_player (read_line ())
+
+let fill_in_players () = 
+  for x = 0 to Array.length player_list do 
+    print_endline "How many people are playing?";
+    print_endline "> ";
+    player_list.(x) <- (request_player_name x)
+  done
 
 let rec try_again_turn bank sentence =
   print_endline "> ";
@@ -36,10 +58,10 @@ let rec try_again_turn bank sentence =
   print_endline succ.message;
   if succ.success then get_next_player else try_again_turn bank sentence
 
-let rec one_player_turn player bank sentence next =
+let one_player_turn player bank sentence next =
   print_endline (Player.get_player_name player ^ "'s turn:\n");
   print_endline (sentence ^ "\n");
-  print_endline "Fill in " ^ Get_data.get_blanks sentence ^ "blanks using:\n";
+  print_endline ()"Fill in " ^ Get_data.get_blanks sentence ^ "blanks using:\n");
   print_endline (strlst_to_str bank);
   print_string "> ";
   let succ = askforwords bank sentence in
