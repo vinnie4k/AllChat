@@ -1,10 +1,6 @@
-open Allchat
-open Profile
-
 let data_dir_prefix = "data" ^ Filename.dir_sep
-
-let words_and_sentences =
-  Yojson.Basic.from_file (data_dir_prefix ^ "test_data.json")
+let test = Yojson.Basic.from_file (data_dir_prefix ^ "test_data.json")
+let test_json = Get_data.from_json test
 
 (*checks if words inputted are actually from the word bank*)
 let rec valid_words request bank =
@@ -16,20 +12,17 @@ let ugly_list_of_string s = String.split_on_char ' ' s
 let nice_list_of_string sl = List.filter (fun s -> s <> "") sl
 let parse str = str |> ugly_list_of_string |> nice_list_of_string
 
-let rec strlst_to_str = function
-  | [] -> ""
-  | h :: t -> h ^ " | " ^ strlst_to_str t
+(* I commented this out because it wasn't used, you can uncomment it when you
+   need to use it*)
+(* let rec strlst_to_str = function | [] -> "" | h :: t -> h ^ " | " ^
+   strlst_to_str t *)
 
 type input_success = {
   message : string;
   success : bool;
 }
 
-let data_dir_prefix = "data" ^ Filename.dir_sep
-let test = Yojson.Basic.from_file (data_dir_prefix ^ "test_data.json")
-let test_json = Get_data.from_json test
-
-let askforwords (bank : string list) (sentence : string) =
+let ask_forwords (bank : string list) (sentence : string) =
   (*print instructions*)
   let input = parse (read_line ()) in
   if valid_words input bank then
@@ -51,7 +44,7 @@ let player_list = Array.make !num_players (Player.new_player "|*_*|")
 let request_player_name p =
   print_endline ("Enter name of Player #" ^ string_of_int p);
   print_endline "> ";
-  new_player (read_line ())
+  Player.new_player (read_line ())
 
 let fill_in_players () =
   for x = 0 to Array.length player_list do
@@ -60,22 +53,19 @@ let fill_in_players () =
     player_list.(x) <- request_player_name x
   done
 
-let rec try_again_turn bank sentence =
-  print_endline "> ";
-  let succ = askforwords bank sentence in
-  print_endline succ.message;
-  if succ.success then get_next_player else try_again_turn bank sentence
+(* let rec try_again_turn bank sentence = print_endline "> "; let succ =
+   askforwords bank sentence in print_endline succ.message; if succ.success then
+   get_next_player else try_again_turn bank sentence *)
 
-let one_player_turn player bank sentence next =
-  print_endline (Player.get_player_name player ^ "'s turn:\n");
-  print_endline (sentence ^ "\n");
+(* let one_player_turn player bank sentence next = print_endline
+   (Player.get_player_name player ^ "'s turn:\n"); print_endline (sentence ^
+   "\n");
 
-  print_endline
-    ("Fill in "
-    ^ (Get_data.get_blanks test_json sentence |> string_of_int)
-    ^ "blanks using:\n");
-  print_endline (strlst_to_str bank);
-  print_string "> ";
-  let succ = askforwords bank sentence in
-  print_endline succ.message;
-  if succ.success then get_next_player else try_again_turn bank sentence
+   print_endline ("Fill in " ^ (Get_data.get_blanks test_json sentence |>
+   string_of_int) ^ "blanks using:\n"); print_endline (strlst_to_str bank);
+   print_string "> "; let succ = askforwords bank sentence in print_endline
+   succ.message; if succ.success then get_next_player else try_again_turn bank
+   sentence *)
+
+let trigger_next_player _ _ = raise (Failure "Unimplemented")
+let one_player_turn _ _ _ _ = raise (Failure "Unimplemented")

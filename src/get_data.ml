@@ -1,6 +1,6 @@
 open Yojson.Basic.Util
 
-exception InvalidWord of string
+(* exception InvalidWord of string *)
 exception InvalidSentence of string
 
 type part_of_speech =
@@ -31,7 +31,7 @@ type t = {
   sentences : sentence list;
 }
 
-exception InvalidWords of word list
+exception InvalidWords of string list
 
 (** helper functions for from_json *)
 let match_pos str =
@@ -78,7 +78,7 @@ let rec get_word_helper repo int str_lst =
     get_word_helper repo (int - 1) (word.term :: str_lst)
 
 (** get_word function *)
-let rec get_word repo int = get_word_helper repo int []
+let get_word repo int = get_word_helper repo int []
 (* currently this function could choose the same word twice!!!!! *)
 
 (** get_sentence function *)
@@ -128,8 +128,7 @@ let rec check_all_words repo lst =
   match lst with
   | [] -> true
   | h :: t ->
-      if wordin_word_repo repo.words h.term then check_all_words repo t
-      else false
+      if wordin_word_repo repo.words h then check_all_words repo t else false
 
 let rec sentencein_word_repo sentences sentence =
   match sentences with
@@ -145,17 +144,17 @@ let score_matching sen_pos word_pos sen_con word_con =
   else 50
 
 (** return the calculations for a word *)
-let calculate repo sentence word =
+let calculate repo sentence (word : string) =
   let sentence_prop =
     List.filter (fun x -> x.sentence = sentence) repo.sentences
   in
-  let word_prop = List.filter (fun x -> x = word) repo.words in
+  let word_prop = List.filter (fun x -> x.term = word) repo.words in
   score_matching (List.hd sentence_prop).expected_pos
     (List.hd word_prop).part_of_speech (List.hd sentence_prop).connotation
     (List.hd word_prop).connotation
 
 (** gets the list of all the scores *)
-let rec calculate_score_helper repo sentence words scores =
+let rec calculate_score_helper repo sentence (words : string list) scores =
   match words with
   | [] -> scores
   | h :: t ->
@@ -164,7 +163,7 @@ let rec calculate_score_helper repo sentence words scores =
 (* does not consider when words is empty!!!! *)
 
 (** calculate_score function *)
-let calculate_score repo sentence words =
+let calculate_score repo sentence (words : string list) =
   if Bool.not (check_all_words repo words) then raise (InvalidWords words)
   else if Bool.not (sentencein_word_repo repo.sentences sentence) then
     raise (InvalidSentence sentence)
