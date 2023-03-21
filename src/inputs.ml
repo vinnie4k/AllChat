@@ -2,7 +2,9 @@ open Allchat
 open Profile
 
 let data_dir_prefix = "data" ^ Filename.dir_sep
-let words_and_sentences = Yojson.Basic.from_file (data_dir_prefix ^ "test_data.json")
+
+let words_and_sentences =
+  Yojson.Basic.from_file (data_dir_prefix ^ "test_data.json")
 
 (*checks if words inputted are actually from the word bank*)
 let rec valid_words request bank =
@@ -38,23 +40,24 @@ let askforwords (bank : string list) (sentence : string) =
       success = false;
     }
 
-
-
-(*handling player count at game start*)    
-let num_players = print_endline "How many people are playing?";
+(*handling player count at game start*)
+let num_players =
+  print_endline "How many people are playing?";
   print_endline "> ";
   ref (int_of_string (read_line ()))
+
 let player_list = Array.make !num_players (Player.new_player "|*_*|")
-let request_player_name p = 
-  print_endline ("Enter name of Player #"^ (string_of_int p));
+
+let request_player_name p =
+  print_endline ("Enter name of Player #" ^ string_of_int p);
   print_endline "> ";
   new_player (read_line ())
 
-let fill_in_players () = 
-  for x = 0 to Array.length player_list do 
+let fill_in_players () =
+  for x = 0 to Array.length player_list do
     print_endline "How many people are playing?";
     print_endline "> ";
-    player_list.(x) <- (request_player_name x)
+    player_list.(x) <- request_player_name x
   done
 
 let rec try_again_turn bank sentence =
