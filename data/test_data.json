@@ -29,6 +29,76 @@
       "word": "bored",
       "part_of_speech": "adjective",
       "connotation": "negative"
+    },
+    {
+      "word": "adventurous",
+      "part_of_speech": "adjective",
+      "connotation": "positive"
+    },
+    {
+      "word": "respectful",
+      "part_of_speech": "adjective",
+      "connotation": "positive"
+    },
+    {
+      "word": "irritated",
+      "part_of_speech": "adjective",
+      "connotation": "negative"
+    },
+    {
+      "word": "dive",
+      "part_of_speech": "verb",
+      "connotation": "neutral"
+    },
+    {
+      "word": "jump",
+      "part_of_speech": "verb",
+      "connotation": "neutral"
+    },
+    {
+      "word": "dance",
+      "part_of_speech": "verb",
+      "connotation": "positive"
+    },
+    {
+      "word": "braids",
+      "part_of_speech": "noun",
+      "connotation": "neutral"
+    },
+    {
+      "word": "birthday",
+      "part_of_speech": "noun",
+      "connotation": "positive"
+    },
+    {
+      "word": "interested",
+      "part_of_speech": "adjective",
+      "connotation": "positive"
+    },
+    {
+      "word": "playing",
+      "part_of_speech": "verb",
+      "connotation": "positive"
+    },
+    {
+      "word": "angry",
+      "part_of_speech": "adjective",
+      "connotation": "negative"
+    },
+    {
+      "word": "joyous",
+      "part_of_speech": "adjective",
+      "connotation": "positive"
+    },
+    {
+      "word": "dark",
+      "part_of_speech": "adjective",
+      "connotation": "negative"
+    },
+    {
+      "word": "harsh",
+      "part_of_speech": "adjective",
+      "connotation": "negative"
     }
   ],
   "sentence_list": [
@@ -48,6 +118,60 @@
       "internal_representation": [
         "I hope you ",
         " into the wall."
+      ]
+    },
+    {
+      "sentence": "The librarian ___ the books.",
+      "expected_pos": "verb",
+      "connotation": "neutral",
+      "internal_representation": [
+        "The librarian ",
+        " the books."
+      ]
+    },
+    {
+      "sentence": "The play was so much ___ today!",
+      "expected_pos": "adjective",
+      "connotation": "positive",
+      "internal_representation": [
+        "The play was so much ",
+        " today!"
+      ]
+    },
+    {
+      "sentence": "Can ___ please quiet down!",
+      "expected_pos": "noun",
+      "connotation": "negative",
+      "internal_representation": [
+        "Can ",
+        " please quiet down!"
+      ]
+    },
+    {
+      "sentence": "That ice cream was so ___!",
+      "expected_pos": "adjective",
+      "connotation": "positive",
+      "internal_representation": [
+        "That ice cream was so ",
+        "!"
+      ]
+    },
+    {
+      "sentence": "Did you see the ___ run across?",
+      "expected_pos": "noun",
+      "connotation": "neutral",
+      "internal_representation": [
+        "Did you see the ",
+        " run across?"
+      ]
+    },
+    {
+      "sentence": "How did she ___ the raccoon?",
+      "expected_pos": "verb",
+      "connotation": "neutral",
+      "internal_representation": [
+        "How did she ",
+        " the raccoon?"
       ]
     }
   ]
