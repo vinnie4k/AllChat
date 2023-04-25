@@ -2,7 +2,7 @@ type t
 (** The abstract type of values representing a player *)
 
 val new_player : string -> t
-(** [new_player] n is the player with the name n, score 0, and an emtpy set of
+(** [new_player] n is the player with the name n, cumulative score 0, and an emtpy set of
     words *)
 
 val get_player_name : t -> string
