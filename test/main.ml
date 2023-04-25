@@ -1,6 +1,5 @@
 open OUnit2
 open Allchat
-(* open Inputs open Interface open Player *)
 
 let data_dir_prefix = "data" ^ Filename.dir_sep
 let test = Yojson.Basic.from_file (data_dir_prefix ^ "test_data.json")
