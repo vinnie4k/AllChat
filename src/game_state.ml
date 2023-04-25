@@ -20,7 +20,20 @@ let get_round game_state = game_state.current_round
 
 let did_game_end game_state= game_state.game_end
 
-let get_winner game_state = Array.get game_state.players 0 |> Player.get_player_name
+let get_round_score_total_list game_state = Array.map Player.get_player_score game_state.players |> Array.to_list
+
+(*trying to find the max score in the round score array*)
+let rec max_score_finder lst=
+  match lst with
+  | [] -> 0
+  | h :: t -> if h > max_score_finder t then h else max_score_finder t
+
+(*match the max score with the actual index*)
+let rec find_max_score_index round_score_total max_score index =
+if round_score_total.(index) = max_score then index
+else find_max_score_index round_score_total max_score (index+1)
+
+let get_winner game_state = Array.get game_state.players (find_max_score_index (get_round_score_total game_state) (max_score_finder (get_round_score_total_list game_state)) (0)) |> Player.get_player_name
 
 
 (*modifying functions*)
