@@ -1,11 +1,10 @@
 open OUnit2
 open Allchat
-open Get_data
 (* open Inputs open Interface open Player *)
 
 let data_dir_prefix = "data" ^ Filename.dir_sep
 let test = Yojson.Basic.from_file (data_dir_prefix ^ "test_data.json")
-let test_json = from_json test
+let test_json = Get_data.from_json test
 
 let int_list_to_string lst =
   List.fold_left (fun acc x -> acc ^ string_of_int x) "" lst
@@ -17,7 +16,7 @@ let calculate_score_test (name : string) (word_repo : Get_data.t)
     test =
   name >:: fun _ ->
   assert_equal expected_output
-    (int_list_to_string (calculate_score word_repo sentence word_list))
+    (int_list_to_string (Get_data.calculate_score word_repo sentence word_list))
     ~printer:string_of_string
 
 let calculate_score_fail_test (name : string) (word_repo : Get_data.t)
@@ -25,7 +24,7 @@ let calculate_score_fail_test (name : string) (word_repo : Get_data.t)
     =
   name >:: fun _ ->
   assert_raises expected_output (fun () ->
-      calculate_score word_repo sentence word_list)
+      Get_data.calculate_score word_repo sentence word_list)
 
 let algorithm_test =
   [
@@ -44,19 +43,19 @@ let algorithm_test =
        braids, curious] in test_data."
       test_json "How did she ___ the Donkey Kong?"
       [ "running"; "braids"; "curious" ]
-      (InvalidSentence "How did she ___ the Donkey Kong?");
+      (Get_data.InvalidSentence "How did she ___ the Donkey Kong?");
     calculate_score_fail_test
       "gets the exception for How did she ___ the raccoon? with [BAHAHA, \
        braids, curious] in test_data."
       test_json "How did she ___ the raccoon?"
       [ "BAHAHA"; "braids"; "curious" ]
-      (InvalidWords [ "BAHAHA"; "braids"; "curious" ]);
+      (Get_data.InvalidWords [ "BAHAHA"; "braids"; "curious" ]);
     calculate_score_fail_test
       "gets the exception for Fake sentence with [BAHAHA, braids, curious] in \
        test_data."
       test_json "Fake sentence"
       [ "BAHAHA"; "braids"; "curious" ]
-      (InvalidWords [ "BAHAHA"; "braids"; "curious" ]);
+      (Get_data.InvalidWords [ "BAHAHA"; "braids"; "curious" ]);
   ]
 
 let suite = "test suite for Allchat" >::: List.flatten [ algorithm_test ]
