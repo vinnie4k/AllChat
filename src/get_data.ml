@@ -167,4 +167,6 @@ let calculate_score repo sentence (words : string list) =
   if Bool.not (check_all_words repo words) then raise (InvalidWords words)
   else if Bool.not (sentencein_word_repo repo.sentences sentence) then
     raise (InvalidSentence sentence)
-  else calculate_score_helper repo sentence words []
+  else calculate_score_helper repo sentence (List.rev words) []
+(* some reason have to reverse the list before putting it in the helper, so look
+   into that *)

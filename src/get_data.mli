@@ -1,6 +1,14 @@
 type t
 (** The abstract data type representing the words_repo. *)
 
+exception InvalidSentence of string
+(** Raised an exception when an invalid sentence is given. It carries the
+    identifier for the unknown sentence. *)
+
+exception InvalidWords of string list
+(** Raised an exception when at least one invalid word is given. It carries the
+    identifier for the entire list of words. *)
+
 val from_json : Yojson.Basic.t -> t
 (** [from_json j] is the words_repo that [j] represents. Requires: [j] is a
     valid JSON words_repo representation. *)
