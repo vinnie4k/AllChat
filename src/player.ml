@@ -10,6 +10,6 @@ let get_player_score p = p.player_score
 
 let update_score player p = 
   let updated_score = player.player_score + p in
-  player.player_score = updated_score
+  player.player_score <- updated_score
 
 let get_player_word_list p = p.player_word_list
