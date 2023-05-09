@@ -25,3 +25,7 @@ val did_game_end : t -> bool
 
 val get_winner : t -> string
 (** [get_winner] game is the winner of the round, call this function if game ends to determine final winner. *)
+
+val update_player_score : t -> int -> int -> t
+(** [update_player_score game player_index score] updates each [player_index]'s score based on the input [scores]. *)
+

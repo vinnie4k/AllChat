@@ -4,10 +4,10 @@ type game_mode = Toxic | Wholesome
 
 type score_mode = Autoscore | Playscore
 
-type t = {game_mode : game_mode; score_mode : score_mode; game_length: int; num_of_player : int; players : Player.t array; round_scores : int array; current_round : int; game_end : bool}
+type t = {game_mode : game_mode; score_mode : score_mode; game_length: int; num_of_player : int; players : Player.t array; round_scores : int array; current_round : int}
 
 let initialize_game game_mode score_mode game_length num_of_players name_lst = 
-  {game_mode = game_mode; score_mode = score_mode; game_length = game_length; num_of_player = num_of_players; players = List.map Player.new_player name_lst |> Array.of_list; round_scores = Array.make num_of_players 0; current_round = 1; game_end = false}
+  {game_mode = game_mode; score_mode = score_mode; game_length = game_length; num_of_player = num_of_players; players = List.map Player.new_player name_lst |> Array.of_list; round_scores = Array.make num_of_players 0; current_round = 1}
 
 
 (*retrieval/access functions*)
@@ -18,7 +18,7 @@ let get_round_score_total game_state = Array.map Player.get_player_score game_st
 
 let get_round game_state = game_state.current_round
 
-let did_game_end game_state= game_state.game_end
+let did_game_end game_state= game_state.current_round >= game_state.game_length
 
 (*[get_round_score_total_list] game_state is a helper function to turn the array of total scores into a list of total scores*)
 let get_round_score_total_list game_state = Array.map Player.get_player_score game_state.players |> Array.to_list
@@ -36,5 +36,4 @@ else find_max_score_index round_score_total max_score (index+1)
 
 let get_winner game_state = Array.get game_state.players (find_max_score_index (get_round_score_total game_state) (max_score_finder (get_round_score_total_list game_state)) (0)) |> Player.get_player_name
 
-
-(*modifying functions*)
+let update_player_score game player_index score = Player.update_score (Array.get game.players player_index) score
