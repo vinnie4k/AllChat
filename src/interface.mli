@@ -34,3 +34,17 @@ val invalid_input : string -> string
 val create_game_mode : string -> Game_state.game_mode
 (** [create_game_mode x] is Some Game_state.game_mode if [x] is a valid game
     mode or None if not *)
+
+val get_player : int -> Player.t array -> Player.t
+(** [get_player n arr] is the player at index [n] in [arr] *)
+
+val format_word_bank : string list -> string
+(** [format_word_bank bank] formats a string list of words [bank] into an
+    outputtable format *)
+
+val words_to_list : string -> string list
+(** [words_to_list x] converts [x] to a list of strings, separated by a space *)
+
+val process_response : string -> string -> unit
+(** [process_response x sentence] processes the user input [x] and [sentence]
+    and checks if the number of words is valid *)

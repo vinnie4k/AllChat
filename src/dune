@@ -1,4 +1,4 @@
 (library
  (name allchat)
  (public_name Allchat)
- (libraries yojson ANSITerminal))
+ (libraries yojson ANSITerminal Str))

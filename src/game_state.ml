@@ -26,6 +26,7 @@ type game_mode =
 
 type game_data = {
   g_mode : game_mode;
+  num_rounds : int;
   num_players : int;
   players : Player.t array;
 }
@@ -34,20 +35,22 @@ let game =
   ref
     {
       g_mode = Wholesome;
+      num_rounds = 0;
       num_players = 0;
       players = Array.make 0 (Player.new_player "");
     }
 
 let string_of_game () =
   match !game with
-  | { g_mode; num_players; players } ->
+  | { g_mode; num_rounds; num_players; players } ->
       "{"
       ^ (match g_mode with
         | Wholesome -> "Wholesome"
         | Toxic -> "Toxic")
-      ^ ", " ^ string_of_int num_players ^ ", "
+      ^ ", " ^ string_of_int num_rounds ^ ", " ^ string_of_int num_players
+      ^ ", "
       ^ (get_player_names (Array.to_list players) |> names_separated)
 
 let initialize_game g_mode num_p name_array =
-  game := { g_mode; num_players = num_p; players = name_array };
+  game := { g_mode; num_rounds = 3; num_players = num_p; players = name_array };
   print_endline (string_of_game ())

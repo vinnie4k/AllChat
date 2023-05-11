@@ -2,7 +2,12 @@ type game_mode =
   | Toxic
   | Wholesome  (** The type representing the the different game modes. *)
 
-type game_data
+type game_data = {
+  g_mode : game_mode;
+  num_rounds : int;
+  num_players : int;
+  players : Player.t array;
+}
 (** The abstract data type representing the the game and its state. It includes
     the game mode, score mode, number of players, the player themselves, scores
     for each round for each player, current round, and whether or not the game
