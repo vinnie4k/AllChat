@@ -8,6 +8,9 @@ exception InvalidSentence of string
 exception OutOfWords
 (** Raised an exception when all the words in a file is used. *)
 
+exception OutOfSentences
+(** Raised an exception when all the sentences in a file is used. *)
+
 exception InvalidWords of string list
 (** Raised an exception when at least one invalid word is given. It carries the
     identifier for the entire list of words. *)

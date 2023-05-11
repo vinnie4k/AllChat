@@ -1,8 +1,9 @@
 open Yojson.Basic.Util
 
-(* exception InvalidWord of string *)
 exception InvalidSentence of string
 exception OutOfWords
+exception OutOfSentences
+exception InvalidWords of string list
 
 type part_of_speech =
   | Adjective
@@ -31,8 +32,6 @@ type t = {
   words : word list;
   sentences : sentence list;
 }
-
-exception InvalidWords of string list
 
 (** helper functions for from_json *)
 let match_pos str =
@@ -71,44 +70,59 @@ let from_json json =
       json |> member "sentence_list" |> to_list |> List.map sentence_of_json;
   }
 
-type base = { mutable used_word : int list }
+type base = { mutable used : int list }
 
 (* helper function for get_word *)
-let word_base = { used_word = [] }
+let word_base = { used = [] }
 
 (* debugging function that I might need *)
 (* let rec print_words lst = match lst with | [] -> print_string "done" | h :: t
    -> print_words t; h |> string_of_int |> print_string *)
 
-let still_words repo =
-  List.length repo.words - List.length word_base.used_word > 0
+let still_words repo = List.length repo.words - List.length word_base.used > 0
 
-let rec check_dup int upper =
-  if List.mem int word_base.used_word then check_dup (Random.int upper) upper
+let rec check_word_dup int upper =
+  if List.mem int word_base.used then check_word_dup (Random.int upper) upper
   else int
 
 let rec get_word_helper repo int str_lst =
   if int = 0 then str_lst
   else if still_words repo then (
     let size = List.length repo.words in
-    let this_int = check_dup (Random.int size) size in
+    let this_int = check_word_dup (Random.int size) size in
     let word = List.nth repo.words this_int in
-    word_base.used_word <- this_int :: word_base.used_word;
-    get_word_helper repo (int - 1) (word.term :: str_lst)
-    (* shouldn't get duplicates now, but need to test *)
-    (* let word = List.length repo.words |> Random.int |> List.nth repo.words in
-       get_word_helper repo (int - 1) (word.term :: str_lst) *))
+    word_base.used <- this_int :: word_base.used;
+    get_word_helper repo (int - 1) (word.term :: str_lst))
   else raise OutOfWords
+(* shouldn't get duplicates now, but need to test *)
+(* let word = List.length repo.words |> Random.int |> List.nth repo.words in
+   get_word_helper repo (int - 1) (word.term :: str_lst) *)
 
 (** get_word function *)
 let get_word repo int = get_word_helper repo int []
 
+(* helper function for get_sentence *)
+let sentence_base = { used = [] }
+
+let still_sentences repo =
+  List.length repo.sentences - List.length sentence_base.used > 0
+
+let check_sentence_dup int upper =
+  if List.mem int sentence_base.used then
+    check_word_dup (Random.int upper) upper
+  else int
+
 (** get_sentence function *)
 let get_sentence repo =
-  let sentence =
-    List.length repo.sentences |> Random.int |> List.nth repo.sentences
-  in
-  sentence.sentence
+  if still_sentences repo then (
+    let size = List.length repo.sentences in
+    let this_int = check_sentence_dup (Random.int size) size in
+    let sentence = List.nth repo.sentences this_int in
+    sentence_base.used <- this_int :: sentence_base.used;
+    sentence.sentence)
+  else raise OutOfSentences
+(* let sentence = List.length repo.sentences |> Random.int |> List.nth
+   repo.sentences in sentence.sentence *)
 
 (** helper function for get_blanks *)
 let rec get_blanks_helper lst sentence =
@@ -177,12 +191,13 @@ let calculate repo sentence (word : string) =
 
 (** gets the list of all the scores *)
 let rec calculate_score_helper repo sentence (words : string list) scores =
-  match words with
-  | [] -> scores
-  | h :: t ->
-      calculate_score_helper repo sentence t
-        ((100 - calculate repo sentence h) :: scores)
-(* does not consider when words is empty!!!! *)
+  if words = [] && scores = [] then raise (InvalidWords words)
+  else
+    match words with
+    | [] -> scores
+    | h :: t ->
+        calculate_score_helper repo sentence t
+          ((100 - calculate repo sentence h) :: scores)
 
 (** calculate_score function *)
 let calculate_score repo sentence (words : string list) =
@@ -190,5 +205,4 @@ let calculate_score repo sentence (words : string list) =
   else if Bool.not (sentencein_word_repo repo.sentences sentence) then
     raise (InvalidSentence sentence)
   else calculate_score_helper repo sentence (List.rev words) []
-(* some reason have to reverse the list before putting it in the helper, so look
-   into that *)
+(* change calculate_score to string list list so can have multiple inputs *)
