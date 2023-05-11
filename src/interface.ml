@@ -32,3 +32,17 @@ let rec names_separated lst =
     match lst with
     | [] -> ""
     | h :: t -> h ^ ", " ^ names_separated t
+
+let invalid_input ans =
+  let outpt =
+    output_question "That is not a valid "
+    ^ ans ^ ". Please enter a valid " ^ ans ^ "."
+  in
+  outpt
+
+let rec create_game_mode player_input =
+  let s = player_input |> String.trim |> String.lowercase_ascii in
+  match s with
+  | "wholesome" -> Game_state.Wholesome
+  | "toxic" -> Game_state.Toxic
+  | _ -> create_game_mode (invalid_input "game mode")

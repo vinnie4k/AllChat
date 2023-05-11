@@ -3,6 +3,10 @@ open Allchat
 (** [start_game f] starts the AllChat game in file [f]. *)
 let start_game f =
   Interface.output_statement ("Loading game file " ^ f);
+  let game_mode =
+    Interface.create_game_mode
+      (Interface.output_question "Enter the game mode (Toxic or Wholesome): ")
+  in
   let num_players =
     int_of_string (Interface.output_question "How many people are playing?")
   in
@@ -14,7 +18,8 @@ let start_game f =
     ("Welcome to AllChat, "
     ^ (Interface.fetch_player_names (Array.to_list player_list)
       |> Interface.names_separated)
-    ^ "!")
+    ^ "!");
+  Game_state.initialize_game game_mode num_players player_list
 
 (** [main ()] prompts for the game to play, then starts it. *)
 let main () =

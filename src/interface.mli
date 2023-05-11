@@ -27,3 +27,10 @@ val names_separated : string list -> string
 (** [names_separated lst] is a string containing the names in [lst] separated by
     a comma. If there are only two players, then the strings are separated by
     'and'. *)
+
+val invalid_input : string -> string
+(** [invalid_input x] returns a string message for an invalid [x] *)
+
+val create_game_mode : string -> Game_state.game_mode
+(** [create_game_mode x] is Some Game_state.game_mode if [x] is a valid game
+    mode or None if not *)
