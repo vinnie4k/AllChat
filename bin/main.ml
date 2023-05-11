@@ -11,11 +11,11 @@ let wpr = 6
 
 let play_round data rnd_num player_num p_array =
   Interface.output_statement ("\nROUND\n   " ^ string_of_int rnd_num ^ " BEGIN!");
-  let round_sentence = Get_data.get_sentence data in
-  let formatted_word_bank =
-    Interface.format_word_bank (Get_data.get_word data wpr)
-  in
   for pn = 0 to player_num (*player number*) do
+    let round_sentence = Get_data.get_sentence data in
+    let formatted_word_bank =
+      Interface.format_word_bank (Get_data.get_word data wpr)
+    in
     Interface.output_statement
       ("\n"
       ^ Player.get_player_name (Interface.get_player pn p_array)
