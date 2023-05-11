@@ -3,12 +3,30 @@ open Allchat
 
 let data_dir_prefix = "data" ^ Filename.dir_sep
 let test = Yojson.Basic.from_file (data_dir_prefix ^ "test_data.json")
+let small = Yojson.Basic.from_file (data_dir_prefix ^ "small_data.json")
 let test_json = Get_data.from_json test
+let small_json = Get_data.from_json small
 
 let int_list_to_string lst =
   List.fold_left (fun acc x -> acc ^ string_of_int x) "" lst
 
 let string_of_string str = str
+
+let rec check_mems lst1 lst2 =
+  match lst1 with
+  | [] -> true
+  | h :: t -> if List.mem h lst2 then check_mems t lst2 else false
+
+let get_word_test (name : string) (word_repo : Get_data.t) (num_word : int)
+    (expected_list : string list) (expected_output : bool) : test =
+  name >:: fun _ ->
+  assert_equal expected_output
+    (check_mems (Get_data.get_word word_repo num_word) expected_list)
+
+let get_word_fail_test (name : string) (word_repo : Get_data.t) (num_word : int)
+    (expected_output : exn) : test =
+  name >:: fun _ ->
+  assert_raises expected_output (fun () -> Get_data.get_word word_repo num_word)
 
 let calculate_score_test (name : string) (word_repo : Get_data.t)
     (sentence : string) (word_list : string list) (expected_output : string) :
@@ -27,6 +45,11 @@ let calculate_score_fail_test (name : string) (word_repo : Get_data.t)
 
 let algorithm_test =
   [
+    get_word_test "get a word from small_data" small_json 2
+      [ "curious"; "bubbly" ] true;
+    get_word_fail_test
+      "get an exception because data size isn't large enough from small_data"
+      small_json 3 Get_data.OutOfWords;
     calculate_score_test
       "gets the scores for Did you see the ___ run across? with [iron, bubbly] \
        in test_data."

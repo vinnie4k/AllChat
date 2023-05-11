@@ -2,6 +2,7 @@ open Yojson.Basic.Util
 
 (* exception InvalidWord of string *)
 exception InvalidSentence of string
+exception OutOfWords
 
 type part_of_speech =
   | Adjective
@@ -70,16 +71,37 @@ let from_json json =
       json |> member "sentence_list" |> to_list |> List.map sentence_of_json;
   }
 
-(** helper function for get_word *)
+type base = { mutable used_word : int list }
+
+(* helper function for get_word *)
+let word_base = { used_word = [] }
+
+(* debugging function that I might need *)
+(* let rec print_words lst = match lst with | [] -> print_string "done" | h :: t
+   -> print_words t; h |> string_of_int |> print_string *)
+
+let still_words repo =
+  List.length repo.words - List.length word_base.used_word > 0
+
+let rec check_dup int upper =
+  if List.mem int word_base.used_word then check_dup (Random.int upper) upper
+  else int
+
 let rec get_word_helper repo int str_lst =
   if int = 0 then str_lst
-  else
-    let word = List.length repo.words |> Random.int |> List.nth repo.words in
+  else if still_words repo then (
+    let size = List.length repo.words in
+    let this_int = check_dup (Random.int size) size in
+    let word = List.nth repo.words this_int in
+    word_base.used_word <- this_int :: word_base.used_word;
     get_word_helper repo (int - 1) (word.term :: str_lst)
+    (* shouldn't get duplicates now, but need to test *)
+    (* let word = List.length repo.words |> Random.int |> List.nth repo.words in
+       get_word_helper repo (int - 1) (word.term :: str_lst) *))
+  else raise OutOfWords
 
 (** get_word function *)
 let get_word repo int = get_word_helper repo int []
-(* currently this function could choose the same word twice!!!!! *)
 
 (** get_sentence function *)
 let get_sentence repo =

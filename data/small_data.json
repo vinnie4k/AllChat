@@ -1,0 +1,34 @@
+{
+  "word_list": [
+    {
+      "word": "curious",
+      "part_of_speech": "adjective",
+      "connotation": "positive"
+    },
+    {
+      "word": "bubbly",
+      "part_of_speech": "adjective",
+      "connotation": "positive"
+    }
+  ],
+  "sentence_list": [
+    {
+      "sentence": "I was ___ down the street.",
+      "expected_pos": "verb",
+      "connotation": "neutral",
+      "internal_representation": [
+        "I was ",
+        " down the street."
+      ]
+    },
+    {
+      "sentence": "I hope you ___ into the wall!",
+      "expected_pos": "verb",
+      "connotation": "negative",
+      "internal_representation": [
+        "I hope you ",
+        " into the wall."
+      ]
+    }
+  ]
+}
