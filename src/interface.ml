@@ -32,3 +32,25 @@ let rec names_separated lst =
     match lst with
     | [] -> ""
     | h :: t -> h ^ ", " ^ names_separated t
+
+let invalid_input ans =
+  let outpt =
+    output_question
+      ("That is not a valid " ^ ans ^ ". Please enter a valid " ^ ans ^ ".")
+  in
+  outpt
+
+let rec create_game_mode player_input =
+  let s = player_input |> String.trim |> String.lowercase_ascii in
+  match s with
+  | "wholesome" -> Game_state.Wholesome
+  | "toxic" -> Game_state.Toxic
+  | _ -> create_game_mode (invalid_input "game mode")
+
+let format_word_bank bank =
+  let strin = List.fold_left (fun acc word -> word ^ " | " ^ acc) "" bank in
+  String.sub strin 0 (String.length strin - 3)
+
+let get_player n arr = arr.(n)
+let words_to_list x = Str.split_delim (Str.regexp " ") x
+let process_response wrd_strng sent_strng = print_string (wrd_strng ^ sent_strng)

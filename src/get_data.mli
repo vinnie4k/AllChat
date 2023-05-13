@@ -5,6 +5,12 @@ exception InvalidSentence of string
 (** Raised an exception when an invalid sentence is given. It carries the
     identifier for the unknown sentence. *)
 
+exception OutOfWords
+(** Raised an exception when all the words in a file is used. *)
+
+exception OutOfSentences
+(** Raised an exception when all the sentences in a file is used. *)
+
 exception InvalidWords of string list
 (** Raised an exception when at least one invalid word is given. It carries the
     identifier for the entire list of words. *)
@@ -16,7 +22,8 @@ val from_json : Yojson.Basic.t -> t
 val get_word : t -> int -> string list
 (** [get_word j i] gets [i] amount of words from words_repo [j]. Example:
     [get_word test_data 2] is [\["curious", "bored"\]] because it gets two words
-    from the words_repo test_data. *)
+    from the words_repo test_data. When all the words in [j] is used up then
+    raise OutOfWords *)
 
 val get_sentence : t -> string
 (** [get_sentence j] gets a sentence from words_repo[j]. Example:

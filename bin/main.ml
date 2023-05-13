@@ -1,8 +1,45 @@
 open Allchat
 
+let file_name = "test_data.json"
+
+(* [gf] is the game file stored as a words repo of type Get_data.t *)
+let gf = "data/" ^ file_name |> Yojson.Basic.from_file |> Get_data.from_json
+
+(* [wpr] is a constant representing the number of words a player gets per
+   round *)
+let wpr = 6
+
+let play_round data rnd_num player_num p_array =
+  Interface.output_statement ("\nROUND\n   " ^ string_of_int rnd_num ^ " BEGIN!");
+  for pn = 0 to player_num (*player number*) do
+    let round_sentence = Get_data.get_sentence data in
+    let formatted_word_bank =
+      Interface.format_word_bank (Get_data.get_word data wpr)
+    in
+    Interface.output_statement
+      ("\n"
+      ^ Player.get_player_name (Interface.get_player pn p_array)
+      ^ "'s turn:");
+    Interface.output_statement ("\"" ^ round_sentence ^ "\"");
+    (let blanks = Get_data.get_blanks gf round_sentence in
+     Interface.output_statement
+       ("Fill in " ^ (blanks |> string_of_int) ^ " blanks using:\n"
+      (*add correct grammar later*) ^ formatted_word_bank);
+     if rnd_num = 1 then
+       Interface.output_statement
+         "(type your words in the order they should appear in the sentence, \
+          separating the words with spaces)");
+    let response = Interface.output_question "" in
+    Interface.process_response response ""
+  done
+
 (** [start_game f] starts the AllChat game in file [f]. *)
 let start_game f =
   Interface.output_statement ("Loading game file " ^ f);
+  let game_mode =
+    Interface.create_game_mode
+      (Interface.output_question "Enter the game mode (Toxic or Wholesome): ")
+  in
   let num_players =
     int_of_string (Interface.output_question "How many people are playing?")
   in
@@ -14,7 +51,10 @@ let start_game f =
     ("Welcome to AllChat, "
     ^ (Interface.fetch_player_names (Array.to_list player_list)
       |> Interface.names_separated)
-    ^ "!")
+    ^ "!");
+  Game_state.initialize_game game_mode num_players player_list;
+  (*play one round test*)
+  play_round gf 1 Game_state.(!game.num_players) Game_state.(!game.players)
 
 (** [main ()] prompts for the game to play, then starts it. *)
 let main () =

@@ -11,5 +11,8 @@ val get_player_name : t -> string
 val get_player_score : t -> int
 (** [get_player_score] p is the score of the player *)
 
+val update_score : t -> int -> unit
+(** [update_score] player p*)
+
 val get_player_word_list : t -> string list
 (** [get_player_wordlist] p is the list of words given to the player *)
