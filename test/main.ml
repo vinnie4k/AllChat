@@ -59,6 +59,13 @@ let add_words_test (name : string) (word_repo : Get_data.t) (sentence : string)
     (Get_data.add_words word_repo sentence word_list)
     ~printer:string_of_string
 
+let add_words_fail_test (name : string) (word_repo : Get_data.t)
+    (sentence : string) (word_list : string list) (expected_output : exn) : test
+    =
+  name >:: fun _ ->
+  assert_raises expected_output (fun () ->
+      Get_data.add_words word_repo sentence word_list)
+
 let calculate_score_test (name : string) (word_repo : Get_data.t)
     (sentence : string) (word_list : string list) (expected_output : string) :
     test =
@@ -145,6 +152,42 @@ let algorithm_test =
        from test_json"
       test_json "Did you see the ___ run across?" [ "bubbly" ]
       "Did you see the bubbly run across?";
+    add_words_test
+      "adding the word adventurous to the sentence I hope you ___ into the \
+       wall! from test_json"
+      test_json "I hope you ___ into the wall!" [ "adventurous" ]
+      "I hope you adventurous into the wall!";
+    add_words_test
+      "adding the word dance to the sentence That ice cream was so ___! from \
+       test_json"
+      test_json "That ice cream was so ___!" [ "dance" ]
+      "That ice cream was so dance!";
+    add_words_test
+      "adding the word playing to the sentence The librarian ___ the books. \
+       from test_json"
+      test_json "The librarian ___ the books." [ "playing" ]
+      "The librarian playing the books.";
+    add_words_fail_test
+      "get an exception when attempting to add the word bulldog to the \
+       sentence Did you see the ___ run across? from test_json"
+      test_json "Did you see the ___ run across?" [ "bulldog" ]
+      (Get_data.InvalidWords [ "bulldog" ]);
+    add_words_fail_test
+      "get an exception when attempting to add the word christmas to the \
+       sentence Fake sentence? from test_json"
+      test_json "Fake sentence?" [ "christmas" ]
+      (Get_data.InvalidWords [ "christmas" ]);
+    add_words_fail_test
+      "get an exception when attempting to add the word bubbly to the sentence \
+       Invalid sentence did you see the ___ run across? from test_json"
+      test_json "Invalid sentence did you see the ___ run across?" [ "bubbly" ]
+      (Get_data.InvalidSentence
+         "Invalid sentence did you see the ___ run across?");
+    add_words_fail_test
+      "get an exception when attempting to add the word bubbly to the sentence \
+       Fake sentence? from test_json"
+      test_json "Fake sentence?" [ "bubbly" ]
+      (Get_data.InvalidSentence "Fake sentence?");
     calculate_score_test
       "gets the scores for Did you see the ___ run across? with [iron, bubbly] \
        in test_data."

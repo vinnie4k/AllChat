@@ -176,10 +176,34 @@ let rec concat lst string =
   | [] -> string
   | h :: t -> concat t h ^ string
 
+let rec word_to_string words =
+  match words with
+  | [] -> []
+  | h :: t -> h.term :: word_to_string t
+
+let rec word_within_repo repo words =
+  match words with
+  | [] -> true
+  | h :: t ->
+      if List.mem h (word_to_string repo.words) then word_within_repo repo t
+      else false
+
+let rec sentence_to_string sentences =
+  match sentences with
+  | [] -> []
+  | h :: t -> h.sentence :: sentence_to_string t
+
+let sentence_within_repo repo sentence =
+  List.mem sentence (sentence_to_string repo.sentences)
+
 (** add_words function *)
 let add_words repo sentence word =
-  let lst = add_words_helper repo.sentences sentence word in
-  concat (List.rev lst) ""
+  if Bool.not (word_within_repo repo word) then raise (InvalidWords word)
+  else if Bool.not (sentence_within_repo repo sentence) then
+    raise (InvalidSentence sentence)
+  else
+    let lst = add_words_helper repo.sentences sentence word in
+    concat (List.rev lst) ""
 
 (* need to check both word and sentence are part of the word_repo before
    calculating the score *)
