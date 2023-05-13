@@ -41,6 +41,24 @@ let get_sentence_fail_test (name : string) (word_repo : Get_data.t)
   name >:: fun _ ->
   assert_raises expected_output (fun () -> Get_data.get_sentence word_repo)
 
+let get_blanks_test (name : string) (word_repo : Get_data.t) (sentence : string)
+    (expected_output : int) : test =
+  name >:: fun _ ->
+  assert_equal expected_output (Get_data.get_blanks word_repo sentence)
+
+let get_blanks_fail_test (name : string) (word_repo : Get_data.t)
+    (sentence : string) (expected_output : exn) : test =
+  name >:: fun _ ->
+  assert_raises expected_output (fun () ->
+      Get_data.get_blanks word_repo sentence)
+
+let add_words_test (name : string) (word_repo : Get_data.t) (sentence : string)
+    (word_list : string list) (expected_output : string) : test =
+  name >:: fun _ ->
+  assert_equal expected_output
+    (Get_data.add_words word_repo sentence word_list)
+    ~printer:string_of_string
+
 let calculate_score_test (name : string) (word_repo : Get_data.t)
     (sentence : string) (word_list : string list) (expected_output : string) :
     test =
@@ -61,13 +79,23 @@ let includes_sentence_test (name : string) (word_repo : Get_data.t)
   name >:: fun _ ->
   assert_equal expected_output (Get_data.includes_sentence word_repo sentence)
 
+let includes_word_test (name : string) (word_repo : Get_data.t) (word : string)
+    (expected_output : bool) : test =
+  name >:: fun _ ->
+  assert_equal expected_output (Get_data.includes_word word_repo word)
+
 let algorithm_test =
   [
     get_word_test "get a word from small_data" small_json 2
       [ "curious"; "bubbly" ] true;
+    get_word_test "get a word from small_data" small_json 2
+      [ "bubbly"; "curious" ] true;
     get_word_fail_test
       "get an exception because data size isn't large enough from small_data"
       small_json 3 Get_data.OutOfWords;
+    get_word_fail_test
+      "get an exception because data size isn't large enough from small_data"
+      small_json 100 Get_data.OutOfWords;
     get_word_fail_test
       "get an exception because data size isn't large enough from test_data"
       test_json 22 Get_data.OutOfWords;
@@ -75,8 +103,48 @@ let algorithm_test =
       empty_json 1 Get_data.OutOfWords;
     get_sentence_test "get a sentence from test_data" test_json true;
     get_sentence_test "get a sentence from small_data" small_json true;
-    get_sentence_fail_test "get a sentence from small_data" empty_json
+    get_sentence_fail_test "get a sentence from empty_data" empty_json
       Get_data.OutOfSentences;
+    get_blanks_test
+      "gets the amount of blanks in a Did you see the ___ run across? from \
+       test_data"
+      test_json "Did you see the ___ run across?" 1;
+    get_blanks_test
+      "gets the amount of blanks in a How did she ___ the raccoon? from \
+       test_data"
+      test_json "How did she ___ the raccoon?" 1;
+    get_blanks_test
+      "gets the amount of blanks in a That ice cream was so ___! from test_data"
+      test_json "That ice cream was so ___!" 1;
+    get_blanks_test
+      "gets the amount of blanks in a The play was so much ___ today! from \
+       test_data"
+      test_json "The play was so much ___ today!" 1;
+    get_blanks_test
+      "gets the amount of blanks in a I was ___ down the street. from \
+       small_json"
+      small_json "I was ___ down the street." 1;
+    get_blanks_fail_test
+      "gets the amount of blanks in a The company was so much ___ today! from \
+       small_json"
+      small_json "Willard Straight company was so much ___ today!"
+      (Get_data.InvalidSentence
+         "Willard Straight company was so much ___ today!");
+    get_blanks_fail_test
+      "gets the amount of blanks in a The company was so much ___ today! from \
+       test_data"
+      test_json "The company was so much ___ today!"
+      (Get_data.InvalidSentence "The company was so much ___ today!");
+    get_blanks_fail_test
+      "gets the amount of blanks in a I WANT TO STUDY FOR ALGO RIGHT! NOW from \
+       test_data"
+      test_json "I WANT TO STUDY FOR ALGO RIGHT NOW!"
+      (Get_data.InvalidSentence "I WANT TO STUDY FOR ALGO RIGHT NOW!");
+    add_words_test
+      "adding the word bubbly to the sentence Did you see the ___ run across? \
+       from test_json"
+      test_json "Did you see the ___ run across?" [ "bubbly" ]
+      "Did you see the bubbly run across?";
     calculate_score_test
       "gets the scores for Did you see the ___ run across? with [iron, bubbly] \
        in test_data."
@@ -87,12 +155,45 @@ let algorithm_test =
       test_json "How did she ___ the raccoon?"
       [ "running"; "braids"; "curious" ]
       "1007550";
+    calculate_score_test
+      "gets the scores for How did she ___ the raccoon? with [running, braids, \
+       curious, running, braids, curious] in test_data."
+      test_json "How did she ___ the raccoon?"
+      [ "running"; "braids"; "curious"; "running"; "braids"; "curious" ]
+      "10075501007550";
     calculate_score_fail_test
-      "gets the exception for How did she ___ the Donkey Kong? with [running, \
-       braids, curious] in test_data."
-      test_json "How did she ___ the Donkey Kong?"
+      "gets the exception for How did she ___ the samurai sword? with \
+       [running, braids, curious] in test_data."
+      test_json "How did she ___ the samurai sword?"
       [ "running"; "braids"; "curious" ]
-      (Get_data.InvalidSentence "How did she ___ the Donkey Kong?");
+      (Get_data.InvalidSentence "How did she ___ the samurai sword?");
+    calculate_score_fail_test
+      "gets the exception for How did she ___ the doesn't make sense? with \
+       [running, braids, curious] in test_data."
+      test_json "How did she ___ the doesn't make sense?"
+      [ "running"; "braids"; "curious" ]
+      (Get_data.InvalidSentence "How did she ___ the doesn't make sense?");
+    calculate_score_fail_test
+      "gets the exception for In the void did she ___ the doesn't make sense? \
+       with [running, braids, curious] in test_data."
+      test_json "In the void did she ___ the doesn't make sense?"
+      [ "running"; "braids"; "curious" ]
+      (Get_data.InvalidSentence
+         "In the void did she ___ the doesn't make sense?");
+    calculate_score_fail_test
+      "gets the exception for In the void did she ___ the doesn't make sense? \
+       with [bubbly, iron, curious] in test_data."
+      test_json "In the void did she ___ the doesn't make sense?"
+      [ "bubbly"; "iron"; "curious" ]
+      (Get_data.InvalidSentence
+         "In the void did she ___ the doesn't make sense?");
+    calculate_score_fail_test
+      "gets the exception for On the trampoline did she ___ the doesn't make \
+       sense? with [curious, bubbly] in small_data."
+      small_json "On the trampoline did she ___ the doesn't make sense?"
+      [ "curious"; "bubbly" ]
+      (Get_data.InvalidSentence
+         "On the trampoline did she ___ the doesn't make sense?");
     calculate_score_fail_test
       "gets the exception for How did she ___ the raccoon? with [BAHAHA, \
        braids, curious] in test_data."
@@ -100,11 +201,35 @@ let algorithm_test =
       [ "BAHAHA"; "braids"; "curious" ]
       (Get_data.InvalidWords [ "BAHAHA"; "braids"; "curious" ]);
     calculate_score_fail_test
+      "gets the exception for How did she ___ the raccoon? with [BAHAHA, \
+       braids, curious] in empty_data."
+      empty_json "How did she ___ the raccoon?"
+      [ "BAHAHA"; "braids"; "curious" ]
+      (Get_data.InvalidWords [ "BAHAHA"; "braids"; "curious" ]);
+    calculate_score_fail_test
+      "gets the exception for How did she ___ the raccoon? with [] in \
+       test_data."
+      test_json "How did she ___ the raccoon?" [] (Get_data.InvalidWords []);
+    calculate_score_fail_test
+      "gets the exception for I was ___ down the street. with [] in small_data."
+      small_json "I was ___ down the street." [] (Get_data.InvalidWords []);
+    calculate_score_fail_test
       "gets the exception for Fake sentence with [BAHAHA, braids, curious] in \
        test_data."
       test_json "Fake sentence"
       [ "BAHAHA"; "braids"; "curious" ]
       (Get_data.InvalidWords [ "BAHAHA"; "braids"; "curious" ]);
+    calculate_score_fail_test
+      "gets the exception for Fake sentence with [not, one, thing] in \
+       test_data."
+      test_json "Fake sentence" [ "not"; "one"; "thing" ]
+      (Get_data.InvalidWords [ "not"; "one"; "thing" ]);
+    calculate_score_fail_test
+      "gets the exception for How did she ___ the raccoon? with [another, \
+       completely, unreal] in test_data."
+      test_json "How did she ___ the raccoon?"
+      [ "another"; "completely"; "unreal" ]
+      (Get_data.InvalidWords [ "another"; "completely"; "unreal" ]);
     calculate_score_fail_test
       "gets the exception for no words with [] as word_list in test_data."
       test_json "How did she ___ the raccoon?" [] (Get_data.InvalidWords []);
@@ -132,6 +257,32 @@ let algorithm_test =
     includes_sentence_test
       "check if Can ___ please quiet down. is a sentence in test_data."
       test_json "Can ___ please quiet down." false;
+    includes_word_test "check if curious is a word in test_data." test_json
+      "curious" true;
+    includes_word_test "check if harsh is a word in test_data." test_json
+      "harsh" true;
+    includes_word_test "check if dark is a word in test_data." test_json "dark"
+      true;
+    includes_word_test "check if joyous is a word in test_data." test_json
+      "joyous" true;
+    includes_word_test "check if angry is a word in test_data." test_json
+      "angry" true;
+    includes_word_test "check if playing is a word in test_data." test_json
+      "playing" true;
+    includes_word_test "check if interested is a word in test_data." test_json
+      "interested" true;
+    includes_word_test "check if bruh is a word in test_data." test_json "bruh"
+      false;
+    includes_word_test "check if binglebell is a word in test_data." test_json
+      "binglebell" false;
+    includes_word_test "check if looong is a word in test_data." test_json
+      "looong" false;
+    includes_word_test "check if birthday is a word in test_data." test_json
+      "birthday" true;
+    includes_word_test "check if braids is a word in test_data." test_json
+      "braids" true;
+    includes_word_test "check if dance is a word in test_data." test_json
+      "dance" true;
   ]
 
 let suite = "test suite for Allchat" >::: List.flatten [ algorithm_test ]

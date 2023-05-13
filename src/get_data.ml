@@ -171,9 +171,15 @@ let rec add_words_helper lst sentence word =
         alternate_lst h.internal_representation word [] |> List.rev
       else add_words_helper t sentence word
 
+let rec concat lst string =
+  match lst with
+  | [] -> string
+  | h :: t -> concat t h ^ string
+
 (** add_words function *)
 let add_words repo sentence word =
-  add_words_helper repo.sentences sentence word |> List.hd
+  let lst = add_words_helper repo.sentences sentence word in
+  concat (List.rev lst) ""
 
 (* need to check both word and sentence are part of the word_repo before
    calculating the score *)
