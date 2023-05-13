@@ -31,9 +31,10 @@ let get_word_fail_test (name : string) (word_repo : Get_data.t) (num_word : int)
   assert_raises expected_output (fun () -> Get_data.get_word word_repo num_word)
 
 let get_sentence_test (name : string) (word_repo : Get_data.t)
-    (expected_output : string) : test =
+    (expected_output : bool) : test =
   name >:: fun _ ->
-  assert_equal expected_output (Get_data.get_sentence word_repo)
+  assert_equal expected_output
+    (Get_data.includes_sentence word_repo (Get_data.get_sentence word_repo))
 
 let get_sentence_fail_test (name : string) (word_repo : Get_data.t)
     (expected_output : exn) : test =
@@ -55,6 +56,11 @@ let calculate_score_fail_test (name : string) (word_repo : Get_data.t)
   assert_raises expected_output (fun () ->
       Get_data.calculate_score word_repo sentence word_list)
 
+let includes_sentence_test (name : string) (word_repo : Get_data.t)
+    (sentence : string) (expected_output : bool) : test =
+  name >:: fun _ ->
+  assert_equal expected_output (Get_data.includes_sentence word_repo sentence)
+
 let algorithm_test =
   [
     get_word_test "get a word from small_data" small_json 2
@@ -62,8 +68,13 @@ let algorithm_test =
     get_word_fail_test
       "get an exception because data size isn't large enough from small_data"
       small_json 3 Get_data.OutOfWords;
-    get_sentence_test "get a sentence from small_data" small_json
-      "I was ___ down the street.";
+    get_word_fail_test
+      "get an exception because data size isn't large enough from test_data"
+      test_json 22 Get_data.OutOfWords;
+    get_word_fail_test "get an exception because no data exist in empty_data"
+      empty_json 1 Get_data.OutOfWords;
+    get_sentence_test "get a sentence from test_data" test_json true;
+    get_sentence_test "get a sentence from small_data" small_json true;
     get_sentence_fail_test "get a sentence from small_data" empty_json
       Get_data.OutOfSentences;
     calculate_score_test
@@ -97,6 +108,30 @@ let algorithm_test =
     calculate_score_fail_test
       "gets the exception for no words with [] as word_list in test_data."
       test_json "How did she ___ the raccoon?" [] (Get_data.InvalidWords []);
+    includes_sentence_test
+      "check if I was ___ down the street. is a sentence in test_data."
+      test_json "I was ___ down the street." true;
+    includes_sentence_test
+      "check if I hope you ___ into the wall! is a sentence in test_data."
+      test_json "I hope you ___ into the wall!" true;
+    includes_sentence_test
+      "check if The librarian ___ the books. is a sentence in test_data."
+      test_json "The librarian ___ the books." true;
+    includes_sentence_test
+      "check if A FAKE SENTNCE!!!!!!! is a sentence in test_data." test_json
+      "A FAKE SENTNCE!!!!!!!" false;
+    includes_sentence_test
+      "check if Looks like a real sentence. is a sentence in test_data."
+      test_json "Looks like a real sentence." false;
+    includes_sentence_test
+      "check if The play was so much ___ today! is a sentence in test_data."
+      test_json "The play was so much ___ today!" true;
+    includes_sentence_test
+      "check if Can ___ please quiet down! is a sentence in test_data."
+      test_json "Can ___ please quiet down!" true;
+    includes_sentence_test
+      "check if Can ___ please quiet down. is a sentence in test_data."
+      test_json "Can ___ please quiet down." false;
   ]
 
 let suite = "test suite for Allchat" >::: List.flatten [ algorithm_test ]

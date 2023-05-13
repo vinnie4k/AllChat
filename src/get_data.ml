@@ -101,6 +101,17 @@ let rec get_word_helper repo int str_lst =
 (** get_word function *)
 let get_word repo int = get_word_helper repo int []
 
+(* helper function for include_words *)
+let rec check_word json word =
+  match json with
+  | [] -> false
+  | h :: t -> if h.term = word then true else check_word t word
+
+(** includes_word function *)
+let includes_word repo word =
+  let json = repo.words in
+  check_word json word
+
 (* helper function for get_sentence *)
 let sentence_base = { used = [] }
 
@@ -123,6 +134,17 @@ let get_sentence repo =
   else raise OutOfSentences
 (* let sentence = List.length repo.sentences |> Random.int |> List.nth
    repo.sentences in sentence.sentence *)
+
+(** helper function for includes_sentence *)
+let rec check_sentence json sentence =
+  match json with
+  | [] -> false
+  | h :: t -> if h.sentence = sentence then true else check_sentence t sentence
+
+(** includes_sentence function *)
+let includes_sentence repo sentence =
+  let json = repo.sentences in
+  check_sentence json sentence
 
 (** helper function for get_blanks *)
 let rec get_blanks_helper lst sentence =
