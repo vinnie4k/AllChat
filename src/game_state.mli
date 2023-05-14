@@ -57,5 +57,5 @@ val get_players : game_data ref -> Player.t array
 (** [get_players game_data] returns the array of players, where array index 0
     corresponds to player 1, array index 2 corresponds to player 2, etc... *)
 
-(* val get_winner : game_data ref -> string *)
+val get_winner : game_data ref -> string
 (** [get_winner game_data] returns the winner of the game by their score *)

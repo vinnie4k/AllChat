@@ -48,13 +48,23 @@ val words_to_list : string -> string list
 
 (* val process_response : string -> string list -> int -> string -> int list *)
 (* [process_response x word_bank blanks sentence] processes the user input [x]
-    and [sentence] and checks if the number of words is valid and equal to
-    [blanks], as well as if inputted words were part of the given [word_bank] *)
+   and [sentence] and checks if the number of words is valid and equal to
+   [blanks], as well as if inputted words were part of the given [word_bank] *)
 
-val run_round : int -> Get_data.t -> int -> Player.t array -> string -> int -> int -> string list -> int list
+val run_round :
+  int ->
+  Get_data.t ->
+  int ->
+  Player.t array ->
+  string ->
+  int ->
+  int ->
+  string list ->
+  int list
 (**[run_round pn data wpr p_array round_sentence rnd_num player_num response_list]
-    uses accumulator [pn] to record responses in [response_list] of each player 
-    until the number of players [player_num] is reached. It displays round information*)
+   uses accumulator [pn] to record responses in [response_list] of each player
+   until the number of players [player_num] is reached. It displays round
+   information*)
 
 val display_scoreboard : Game_state.game_data ref -> unit
 (** [display_scoreoard game] displays a formatted scoreboard of each player's

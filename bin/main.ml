@@ -14,13 +14,14 @@ let wpr = 6
 let play_round data rnd_num player_num p_array =
   Interface.output_statement ("\nROUND\n   " ^ string_of_int rnd_num ^ " BEGIN!");
   let round_sentence = Get_data.get_sentence data in
+
   (* for pn = 0 to player_num player number do *)
-    
-    let responses = Interface.run_round 0 data wpr p_array round_sentence rnd_num player_num []
-in Game_state.update_player_scores Game_state.game responses
+  let responses =
+    Interface.run_round 0 data wpr p_array round_sentence rnd_num player_num []
+  in
+  Game_state.update_player_scores Game_state.game responses
 
-     (* Interface.process_response response ""  *)
-
+(* Interface.process_response response "" *)
 
 (** [start_game f] starts the AllChat game in file [f]. *)
 let start_game f =

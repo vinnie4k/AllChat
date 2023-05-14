@@ -54,43 +54,37 @@ let format_word_bank bank =
 let get_player n arr = arr.(n)
 let words_to_list x = Str.split_delim (Str.regexp " ") x
 
-(* let rec word_in_list input bank =
-  match input with
-  | h :: t -> List.exists (fun wrd -> wrd = h) bank || word_in_list t bank
-  | [] -> false *)
+(* let rec word_in_list input bank = match input with | h :: t -> List.exists
+   (fun wrd -> wrd = h) bank || word_in_list t bank | [] -> false *)
 
-let rec run_round pn data wpr p_array round_sentence rnd_num player_num response_list=
-if pn = player_num then 
-  Get_data.calculate_score data round_sentence response_list
-else 
-  let formatted_word_bank =
-    format_word_bank (Get_data.get_word data wpr)
-  in
-  output_statement
-    ("\n"
-    ^ Player.get_player_name (get_player pn p_array)
-    ^ "'s turn:");
-  output_statement ("\"" ^ round_sentence ^ "\"");
-  (let blanks = Get_data.get_blanks data round_sentence in
-   output_statement
-     ("Fill in " ^ (blanks |> string_of_int) ^ " blanks using:\n"
-    (*add correct grammar later*) ^ formatted_word_bank);
-   if rnd_num = 1 then
-     output_statement
-       (* "(type your words in the order they should appear in the sentence, \
-        separating the words with spaces)"); *)"(type a single word with no spaces)");
-  let response = output_question "" in
-    run_round (pn+1) data wpr p_array round_sentence rnd_num player_num (response_list@(response::[]))
-
-(* let rec process_response game wrd_strng wrd_lst blanks sent_strng =
-  let input_words = words_to_list wrd_strng in
-  if not (List.length input_words = blanks) then
-    process_response game (invalid_input "word") wrd_lst blanks sent_strng
+let rec run_round pn data wpr p_array round_sentence rnd_num player_num
+    response_list =
+  if pn = player_num then
+    Get_data.calculate_score data round_sentence response_list
   else
-    match word_in_list input_words wrd_lst with
-    | false ->
-        process_response game (invalid_input "word") wrd_lst blanks sent_strng
-    | true -> (*Get_data.calculate_score file*) 1::2::[] *)
+    let formatted_word_bank = format_word_bank (Get_data.get_word data wpr) in
+    output_statement
+      ("\n" ^ Player.get_player_name (get_player pn p_array) ^ "'s turn:");
+    output_statement ("\"" ^ round_sentence ^ "\"");
+    (let blanks = Get_data.get_blanks data round_sentence in
+     output_statement
+       ("Fill in " ^ (blanks |> string_of_int) ^ " blanks using:\n"
+      (*add correct grammar later*) ^ formatted_word_bank);
+     if rnd_num = 1 then
+       output_statement
+         (* "(type your words in the order they should appear in the sentence, \
+            separating the words with spaces)"); *)
+         "(type a single word with no spaces)");
+    let response = output_question "" in
+    run_round (pn + 1) data wpr p_array round_sentence rnd_num player_num
+      (response_list @ [ response ])
+
+(* let rec process_response game wrd_strng wrd_lst blanks sent_strng = let
+   input_words = words_to_list wrd_strng in if not (List.length input_words =
+   blanks) then process_response game (invalid_input "word") wrd_lst blanks
+   sent_strng else match word_in_list input_words wrd_lst with | false ->
+   process_response game (invalid_input "word") wrd_lst blanks sent_strng | true
+   -> (*Get_data.calculate_score file*) 1::2::[] *)
 
 (* let make_score_pairs s_list p_array = if not (List.length s_list =
    Array.length p_array) then raise "players dont all have a score" else let
