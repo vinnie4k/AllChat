@@ -333,6 +333,14 @@ let algorithm_test =
   (*player test suite*)
   let new_player_liam = Player.new_player "liam"
   let new_player_1 = Player.new_player "12345"
+  let new_player_charlie = Player.new_player "charlie"
+  let new_player_vin = Player.new_player "vin"
+  let new_player_enjie = Player.new_player "enjie"
+  let new_player_rando1 = Player.new_player "rando1"
+  let new_player_rando2 = Player.new_player "rando2"
+  let new_player_rando3 = Player.new_player "rando3"
+
+
 
   let new_player_test (name : string) (n : string) (expected_output : Player.t) : test =
   name >:: fun _ ->
@@ -355,6 +363,19 @@ let algorithm_test =
       let () = (Player.update_score player p) in
     assert_equal expected_output (Player.get_player_score player)
 
+  let update_player_score_twice_test (name : string) (player : Player.t) (p : int) (p2 : int) (expected_output : int) : test =
+    name >:: fun _ ->
+      let () = (Player.update_score player p) in
+      let () = (Player.update_score player p2) in
+    assert_equal expected_output (Player.get_player_score player) ~printer:string_of_int
+
+  let update_player_score_three_test (name : string) (player : Player.t) (p : int) (p2 : int) (p3 : int) (expected_output : int) : test =
+    name >:: fun _ ->
+      let () = (Player.update_score player p) in
+      let () = (Player.update_score player p2) in
+      let () = (Player.update_score player p3) in
+    assert_equal expected_output (Player.get_player_score player) ~printer:string_of_int    
+
   let player_test =
     [
       new_player_test "check initialize new player" "liam" new_player_liam;
@@ -369,9 +390,25 @@ let algorithm_test =
       get_player_word_list_test "word list of initial player should be empty" new_player_liam [];
 
       update_player_score_test "adding 5 points to liam" new_player_liam 5 5;
+      update_player_score_twice_test "adding 5 and 5 is 10 pts" new_player_rando3 5 5 10;
+      update_player_score_twice_test "adding 5 and 0 is 5 pts" new_player_1 5 0 5;
+      update_player_score_twice_test "adding 0 and 0 is 0 pts" new_player_rando1 0 0 0;
+      update_player_score_twice_test "adding 7 and 7 is 14 pts" new_player_charlie 7 7 14;
+
+      update_player_score_twice_test "adding 0 and -3 is -3 pts" new_player_enjie 0 (-3) (-3);
+      update_player_score_twice_test "adding 1000 and 3000 is 4000 pts" new_player_vin 1000 3000 4000;
+
+      update_player_score_three_test "adding 1000 and 3000 and 3000 is 4000 pts" new_player_rando1 1000 3000 3000 7000;
+      update_player_score_three_test "adding 1 and 1 and 1 is 3 pts" new_player_rando1 1 1 1 3;
+      update_player_score_three_test "adding 2000 and -4000 and 1000 is -1000 pts" new_player_rando2 2000 (-4000) 1000 (-1000);
     ]
 
   (*game state test suite*)
+  (* let new_game_data_test (name : string) (g_mode : Game_state.game_mode) (num_p : int) (name_array : Player.t array) (expected_output : Game_state.game_data) : test =
+    name >:: fun _ ->
+    assert_equal expected_output (let n = Game_state.initialize_game g_mode num_p name_array)  *)
+  
+    
 
 let suite = "test suite for Allchat" >::: List.flatten [ algorithm_test; player_test ]
 let _ = run_test_tt_main suite
