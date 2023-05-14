@@ -11,9 +11,414 @@
       "connotation": "positive"
     },
     {
+      "word": "fierce",
+      "part_of_speech": "adjective",
+      "connotation": "negative"
+    },
+    {
+      "word": "defeated",
+      "part_of_speech": "adjective",
+      "connotation": "negative"
+    },
+    {
+      "word": "clumsy",
+      "part_of_speech": "adjective",
+      "connotation": "negative"
+    },
+    {
+      "word": "obligation",
+      "part_of_speech": "noun",
+      "connotation": "negative"
+    },
+    {
+      "word": "midnight",
+      "part_of_speech": "noun",
+      "connotation": "neutral"
+    },
+    {
+      "word": "intention",
+      "part_of_speech": "noun",
+      "connotation": "neutral"
+    },
+    {
+      "word": "sympathy",
+      "part_of_speech": "noun",
+      "connotation": "positive"
+    },
+    {
+      "word": "reputation",
+      "part_of_speech": "noun",
+      "connotation": "positive"
+    },
+    {
+      "word": "poet",
+      "part_of_speech": "noun",
+      "connotation": "negative"
+    },
+    {
+      "word": "pollution",
+      "part_of_speech": "noun",
+      "connotation": "negative"
+    },
+    {
+      "word": "pizza",
+      "part_of_speech": "noun",
+      "connotation": "positive"
+    },
+    {
+      "word": "speaker",
+      "part_of_speech": "noun",
+      "connotation": "neutral"
+    },
+    {
+      "word": "walk",
+      "part_of_speech": "verb",
+      "connotation": "neutral"
+    },
+    {
+      "word": "throat",
+      "part_of_speech": "noun",
+      "connotation": "neutral"
+    },
+    {
+      "word": "sing",
+      "part_of_speech": "verb",
+      "connotation": "positive"
+    },
+    {
+      "word": "touch",
+      "part_of_speech": "verb",
+      "connotation": "neutral"
+    },
+    {
+      "word": "zip",
+      "part_of_speech": "verb",
+      "connotation": "neutral"
+    },
+    {
+      "word": "funeral",
+      "part_of_speech": "noun",
+      "connotation": "negative"
+    },
+    {
+      "word": "friend",
+      "part_of_speech": "noun",
+      "connotation": "positive"
+    },
+    {
+      "word": "worker",
+      "part_of_speech": "noun",
+      "connotation": "negative"
+    },
+    {
+      "word": "garbage",
+      "part_of_speech": "noun",
+      "connotation": "negative"
+    },
+    {
+      "word": "agreeable",
+      "part_of_speech": "adjective",
+      "connotation": "positive"
+    },
+    {
+      "word": "calm",
+      "part_of_speech": "adjective",
+      "connotation": "positive"
+    },
+    {
+      "word": "brave",
+      "part_of_speech": "adjective",
+      "connotation": "positive"
+    },
+    {
+      "word": "grocery",
+      "part_of_speech": "noun",
+      "connotation": "neutral"
+    },
+    {
+      "word": "establishment",
+      "part_of_speech": "noun",
+      "connotation": "neutral"
+    },
+    {
+      "word": "drawer",
+      "part_of_speech": "noun",
+      "connotation": "neutral"
+    },
+    {
+      "word": "honey",
+      "part_of_speech": "noun",
+      "connotation": "positive"
+    },
+    {
+      "word": "breath",
+      "part_of_speech": "noun",
+      "connotation": "neutral"
+    },
+    {
+      "word": "cookie",
+      "part_of_speech": "noun",
+      "connotation": "positive"
+    },
+    {
+      "word": "requirement",
+      "part_of_speech": "noun",
+      "connotation": "negative"
+    },
+    {
+      "word": "summer",
+      "part_of_speech": "noun",
+      "connotation": "positive"
+    },
+    {
+      "word": "potato",
+      "part_of_speech": "noun",
+      "connotation": "neutral"
+    },
+    {
+      "word": "salad",
+      "part_of_speech": "noun",
+      "connotation": "negative"
+    },
+    {
+      "word": "ladder",
+      "part_of_speech": "noun",
+      "connotation": "neutral"
+    },
+    {
+      "word": "menu",
+      "part_of_speech": "noun",
+      "connotation": "neutral"
+    },
+    {
+      "word": "piano",
+      "part_of_speech": "noun",
+      "connotation": "positive"
+    },
+    {
+      "word": "birthday",
+      "part_of_speech": "noun",
+      "connotation": "positive"
+    },
+    {
+      "word": "ambition",
+      "part_of_speech": "noun",
+      "connotation": "positive"
+    },
+    {
+      "word": "sunshine",
+      "part_of_speech": "noun",
+      "connotation": "positive"
+    },
+    {
+      "word": "bike",
+      "part_of_speech": "noun",
+      "connotation": "neutral"
+    },
+    {
+      "word": "celebration",
+      "part_of_speech": "noun",
+      "connotation": "positive"
+    },
+    {
+      "word": "solve",
+      "part_of_speech": "verb",
+      "connotation": "positive"
+    },
+    {
+      "word": "yank",
+      "part_of_speech": "verb",
+      "connotation": "negative"
+    },
+    {
+      "word": "shout",
+      "part_of_speech": "verb",
+      "connotation": "negative"
+    },
+    {
+      "word": "paint",
+      "part_of_speech": "verb",
+      "connotation": "positive"
+    },
+    {
+      "word": "shop",
+      "part_of_speech": "verb",
+      "connotation": "positive"
+    },
+    {
+      "word": "understand",
+      "part_of_speech": "verb",
+      "connotation": "neutral"
+    },
+    {
+      "word": "think",
+      "part_of_speech": "verb",
+      "connotation": "neutral"
+    },
+    {
+      "word": "surprise",
+      "part_of_speech": "verb",
+      "connotation": "positive"
+    },
+    {
+      "word": "smell",
+      "part_of_speech": "verb",
+      "connotation": "neutral"
+    },
+    {
+      "word": "helpless",
+      "part_of_speech": "adjective",
+      "connotation": "negative"
+    },
+    {
+      "word": "itchy",
+      "part_of_speech": "adjective",
+      "connotation": "negative"
+    },
+    {
+      "word": "recognize",
+      "part_of_speech": "verb",
+      "connotation": "neutral"
+    },
+    {
+      "word": "love",
+      "part_of_speech": "verb",
+      "connotation": "positive"
+    },
+    {
+      "word": "impress",
+      "part_of_speech": "verb",
+      "connotation": "positive"
+    },
+    {
+      "word": "concern",
+      "part_of_speech": "verb",
+      "connotation": "negative"
+    },
+    {
+      "word": "win",
+      "part_of_speech": "verb",
+      "connotation": "positive"
+    },
+    {
+      "word": "sleep",
+      "part_of_speech": "verb",
+      "connotation": "positive"
+    },
+    {
+      "word": "act",
+      "part_of_speech": "verb",
+      "connotation": "neutral"
+    },
+    {
+      "word": "jolly",
+      "part_of_speech": "adjective",
+      "connotation": "positive"
+    },
+    {
+      "word": "break",
+      "part_of_speech": "verb",
+      "connotation": "negative"
+    },
+    {
+      "word": "coach",
+      "part_of_speech": "verb",
+      "connotation": "positive"
+    },
+    {
+      "word": "cool",
+      "part_of_speech": "noun",
+      "connotation": "positive"
+    },
+    {
+      "word": "boyfriend",
+      "part_of_speech": "noun",
+      "connotation": "positive"
+    },
+    {
+      "word": "exam",
+      "part_of_speech": "noun",
+      "connotation": "negative"
+    },
+    {
+      "word": "freedom",
+      "part_of_speech": "noun",
+      "connotation": "positive"
+    },
+    {
+      "word": "bewildered",
+      "part_of_speech": "adjective",
+      "connotation": "negative"
+    },
+    {
+      "word": "oven",
+      "part_of_speech": "noun",
+      "connotation": "neutral"
+    },
+    {
+      "word": "girlfriend",
+      "part_of_speech": "noun",
+      "connotation": "positive"
+    },
+    {
+      "word": "jump",
+      "part_of_speech": "verb",
+      "connotation": "neutral"
+    },
+    {
+      "word": "lazy",
+      "part_of_speech": "adjective",
+      "connotation": "negative"
+    },
+    {
+      "word": "mysterious",
+      "part_of_speech": "adjective",
+      "connotation": "negative"
+    },
+    {
+      "word": "nervous",
+      "part_of_speech": "adjective",
+      "connotation": "negative"
+    },
+    {
+      "word": "safety",
+      "part_of_speech": "noun",
+      "connotation": "positive"
+    },
+    {
+      "word": "security",
+      "part_of_speech": "noun",
+      "connotation": "negative"
+    },
+    {
+      "word": "buy",
+      "part_of_speech": "verb",
+      "connotation": "positve"
+    },
+    {
       "word": "iron",
       "part_of_speech": "noun",
       "connotation": "neutral"
+    },
+    {
+      "word": "quality",
+      "part_of_speech": "noun",
+      "connotation": "positive"
+    },
+    {
+      "word": "development",
+      "part_of_speech": "noun",
+      "connotation": "neutral"
+    },
+    {
+      "word": "industry",
+      "part_of_speech": "noun",
+      "connotation": "negative"
+    },
+    {
+      "word": "obnoxious",
+      "part_of_speech": "adjective",
+      "connotation": "negative"
     },
     {
       "word": "running",
@@ -36,6 +441,11 @@
       "connotation": "positive"
     },
     {
+      "word": "delightful",
+      "part_of_speech": "adjective",
+      "connotation": "positive"
+    },
+    {
       "word": "respectful",
       "part_of_speech": "adjective",
       "connotation": "positive"
@@ -44,6 +454,61 @@
       "word": "irritated",
       "part_of_speech": "adjective",
       "connotation": "negative"
+    },
+    {
+      "word": "activity",
+      "part_of_speech": "noun",
+      "connotation": "positive"
+    },
+    {
+      "word": "panicky",
+      "part_of_speech": "adjective",
+      "connotation": "negative"
+    },
+    {
+      "word": "temperature",
+      "part_of_speech": "noun",
+      "connotation": "neutral"
+    },
+    {
+      "word": "science",
+      "part_of_speech": "noun",
+      "connotation": "positive"
+    },
+    {
+      "word": "nature",
+      "part_of_speech": "noun",
+      "connotation": "positive"
+    },
+    {
+      "word": "marriage",
+      "part_of_speech": "noun",
+      "connotation": "positive"
+    },
+    {
+      "word": "teacher",
+      "part_of_speech": "noun",
+      "connotation": "positive"
+    },
+    {
+      "word": "disease",
+      "part_of_speech": "noun",
+      "connotation": "negative"
+    },
+    {
+      "word": "internet",
+      "part_of_speech": "noun",
+      "connotation": "positive"
+    },
+    {
+      "word": "problem",
+      "part_of_speech": "noun",
+      "connotation": "negative"
+    },
+    {
+      "word": "software",
+      "part_of_speech": "noun",
+      "connotation": "neutral"
     },
     {
       "word": "dive",
@@ -56,6 +521,31 @@
       "connotation": "neutral"
     },
     {
+      "word": "lively",
+      "part_of_speech": "adjective",
+      "connotation": "positive"
+    },
+    {
+      "word": "proud",
+      "part_of_speech": "adjective",
+      "connotation": "positive"
+    },
+    {
+      "word": "witty",
+      "part_of_speech": "adjective",
+      "connotation": "positive"
+    },
+    {
+      "word": "silly",
+      "part_of_speech": "adjective",
+      "connotation": "positive"
+    },
+    {
+      "word": "repulsive",
+      "part_of_speech": "adjective",
+      "connotation": "negative"
+    },
+    {
       "word": "dance",
       "part_of_speech": "verb",
       "connotation": "positive"
@@ -66,8 +556,23 @@
       "connotation": "neutral"
     },
     {
+      "word": "eager",
+      "part_of_speech": "adjective",
+      "connotation": "positive"
+    },
+    {
+      "word": "faithful",
+      "part_of_speech": "adjective",
+      "connotation": "positive"
+    },
+    {
       "word": "birthday",
       "part_of_speech": "noun",
+      "connotation": "positive"
+    },
+    {
+      "word": "obidient",
+      "part_of_speech": "adjective",
       "connotation": "positive"
     },
     {
@@ -86,12 +591,267 @@
       "connotation": "negative"
     },
     {
+      "word": "scary",
+      "part_of_speech": "adjective",
+      "connotation": "negative"
+    },
+    {
       "word": "joyous",
       "part_of_speech": "adjective",
       "connotation": "positive"
     },
     {
+      "word": "theory",
+      "part_of_speech": "noun",
+      "connotation": "positive"
+    },
+    {
       "word": "dark",
+      "part_of_speech": "adjective",
+      "connotation": "negative"
+    },
+    {
+      "word": "nasty",
+      "part_of_speech": "adjective",
+      "connotation": "negative"
+    },
+    {
+      "word": "cruel",
+      "part_of_speech": "adjective",
+      "connotation": "negative"
+    },
+    {
+      "word": "wonderful",
+      "part_of_speech": "adjective",
+      "connotation": "positive"
+    },
+    {
+      "word": "uptight",
+      "part_of_speech": "adjective",
+      "connotation": "negative"
+    },
+    {
+      "word": "worried",
+      "part_of_speech": "adjective",
+      "connotation": "negative"
+    },
+    {
+      "word": "fool",
+      "part_of_speech": "noun",
+      "connotation": "negative"
+    },
+    {
+      "word": "data",
+      "part_of_speech": "noun",
+      "connotation": "neutral"
+    },
+    {
+      "word": "cry",
+      "part_of_speech": "verb",
+      "connotation": "negative"
+    },
+    {
+      "word": "describe",
+      "part_of_speech": "verb",
+      "connotation": "neutral"
+    },
+    {
+      "word": "drink",
+      "part_of_speech": "verb",
+      "connotation": "neutral"
+    },
+    {
+      "word": "eat",
+      "part_of_speech": "verb",
+      "connotation": "neutral"
+    },
+    {
+      "word": "edit",
+      "part_of_speech": "verb",
+      "connotation": "neutral"
+    },
+    {
+      "word": "exit",
+      "part_of_speech": "verb",
+      "connotation": "negative"
+    },
+    {
+      "word": "meat",
+      "part_of_speech": "noun",
+      "connotation": "neutral"
+    },
+    {
+      "word": "family",
+      "part_of_speech": "noun",
+      "connotation": "positive"
+    },
+    {
+      "word": "thanks",
+      "part_of_speech": "noun",
+      "connotation": "positive"
+    },
+    {
+      "word": "computer",
+      "part_of_speech": "noun",
+      "connotation": "positive"
+    },
+    {
+      "word": "zealous",
+      "part_of_speech": "adjective",
+      "connotation": "positive"
+    },
+    {
+      "word": "imitate",
+      "part_of_speech": "verb",
+      "connotation": "positive"
+    },
+    {
+      "word": "invent",
+      "part_of_speech": "verb",
+      "connotation": "positive"
+    },
+    {
+      "word": "plan",
+      "part_of_speech": "verb",
+      "connotation": "neutral"
+    },
+    {
+      "word": "read",
+      "part_of_speech": "verb",
+      "connotation": "neutral"
+    },
+    {
+      "word": "laugh",
+      "part_of_speech": "verb",
+      "connotation": "positive"
+    },
+    {
+      "word": "lie",
+      "part_of_speech": "verb",
+      "connotation": "negative"
+    },
+    {
+      "word": "rude",
+      "part_of_speech": "adjective",
+      "connotation": "negative"
+    },
+    {
+      "word": "listen",
+      "part_of_speech": "verb",
+      "connotation": "neutral"
+    },
+    {
+      "word": "coward",
+      "part_of_speech": "noun",
+      "connotation": "negative"
+    },
+    {
+      "word": "health",
+      "part_of_speech": "noun",
+      "connotation": "neutral"
+    },
+    {
+      "word": "information",
+      "part_of_speech": "noun",
+      "connotation": "neutral"
+    },
+    {
+      "word": "aggressive",
+      "part_of_speech": "adjective",
+      "connotation": "negative"
+    },
+    {
+      "word": "map",
+      "part_of_speech": "noun",
+      "connotation": "neutral"
+    },
+    {
+      "word": "people",
+      "part_of_speech": "noun",
+      "connotation": "neutral"
+    },
+    {
+      "word": "victorious",
+      "part_of_speech": "adjective",
+      "connotation": "positive"
+    },
+    {
+      "word": "art",
+      "part_of_speech": "noun",
+      "connotation": "positive"
+    },
+    {
+      "word": "history",
+      "part_of_speech": "noun",
+      "connotation": "neutral"
+    },
+    {
+      "word": "aloof",
+      "part_of_speech": "adjective",
+      "connotation": "neutral"
+    },
+    {
+      "word": "dishonesty",
+      "part_of_speech": "noun",
+      "connotation": "negative"
+    },
+    {
+      "word": "deceitful",
+      "part_of_speech": "adjective",
+      "connotation": "negative"
+    },
+    {
+      "word": "never",
+      "part_of_speech": "verb",
+      "connotation": "negative"
+    },
+    {
+      "word": "thoughtless",
+      "part_of_speech": "adjective",
+      "connotation": "negative"
+    },
+    {
+      "word": "inconsiderate",
+      "part_of_speech": "adjective",
+      "connotation": "negative"
+    },
+    {
+      "word": "pessimism",
+      "part_of_speech": "noun",
+      "connotation": "negative"
+    },
+    {
+      "word": "careless",
+      "part_of_speech": "adjective",
+      "connotation": "negative"
+    },
+    {
+      "word": "impatient",
+      "part_of_speech": "adjective",
+      "connotation": "negative"
+    },
+    {
+      "word": "gentle",
+      "part_of_speech": "adjective",
+      "connotation": "positive"
+    },
+    {
+      "word": "anger",
+      "part_of_speech": "noun",
+      "connotation": "negative"
+    },
+    {
+      "word": "hostility",
+      "part_of_speech": "noun",
+      "connotation": "negative"
+    },
+    {
+      "word": "polite",
+      "part_of_speech": "adjective",
+      "connotation": "positive"
+    },
+    {
+      "word": "arrogant",
       "part_of_speech": "adjective",
       "connotation": "negative"
     },
@@ -121,12 +881,30 @@
       ]
     },
     {
+      "sentence": "Let him ___!",
+      "expected_pos": "verb",
+      "connotation": "positive",
+      "internal_representation": [
+        "Let him ",
+        "!"
+      ]
+    },
+    {
       "sentence": "The librarian ___ the books.",
       "expected_pos": "verb",
       "connotation": "neutral",
       "internal_representation": [
         "The librarian ",
         " the books."
+      ]
+    },
+    {
+      "sentence": "You can respectfully ___ yourself.",
+      "expected_pos": "verb",
+      "connotation": "negative",
+      "internal_representation": [
+        "You can respectfully ",
+        " yourself."
       ]
     },
     {
