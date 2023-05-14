@@ -24,7 +24,7 @@ let play_round data rnd_num player_num p_array =
 (* Interface.process_response response "" *)
 
 (** [start_game f] starts the AllChat game in file [f]. *)
-let rec start_game_repeat game_data =
+let rec consecutive_games game_data =
   Interface.output_statement
     "Thank you for choosing to play again! Happy round two :)";
   let game_mode =
@@ -54,10 +54,10 @@ let rec start_game_repeat game_data =
   Interface.display_overall_scoreboard Game_state.game;
   let output =
     Interface.output_question
-      "To start a new game, type NEW, otherwise, type END"
+      "To start a new game, type NEW, otherwise, type END or anything else"
   in
-  match output with
-  | "NEW" -> start_game_repeat Game_state.game
+  match String.uppercase_ascii output with
+  | "NEW" -> consecutive_games Game_state.game
   | "END" -> ()
   | _ -> ()
 
@@ -96,10 +96,10 @@ let start_game f =
   Interface.display_overall_scoreboard Game_state.game;
   let output =
     Interface.output_question
-      "To start a new game, type NEW, otherwise, type END"
+      "To start a new game, type NEW, otherwise, type END or anything else"
   in
-  match output with
-  | "NEW" -> start_game_repeat Game_state.game
+  match String.uppercase_ascii output with
+  | "NEW" -> consecutive_games Game_state.game
   | "END" -> ()
   | _ -> ()
 
