@@ -19,7 +19,9 @@ let rec check_mems lst1 lst2 =
   | [] -> true
   | h :: t -> if List.mem h lst2 then check_mems t lst2 else false
 
-let get_word_test (name : string) (word_repo : Get_data.t) (num_word : int)
+
+(*get_data test suite*)
+  let get_word_test (name : string) (word_repo : Get_data.t) (num_word : int)
     (expected_list : string list) (expected_output : bool) : test =
   name >:: fun _ ->
   assert_equal expected_output
@@ -328,5 +330,48 @@ let algorithm_test =
       "dance" true;
   ]
 
-let suite = "test suite for Allchat" >::: List.flatten [ algorithm_test ]
+  (*player test suite*)
+  let new_player_liam = Player.new_player "liam"
+  let new_player_1 = Player.new_player "12345"
+
+  let new_player_test (name : string) (n : string) (expected_output : Player.t) : test =
+  name >:: fun _ ->
+  assert_equal expected_output (Player.new_player n) 
+
+  let get_player_name_test (name : string) (player : Player.t) (expected_output : string) : test =
+    name >:: fun _ ->
+    assert_equal expected_output (Player.get_player_name player)
+
+  let get_player_score_test (name : string) (player : Player.t) (expected_output : int) : test =
+    name >:: fun _ ->
+    assert_equal expected_output (Player.get_player_score player)
+
+  let get_player_word_list_test (name : string) (player : Player.t) (expected_output : string list) : test =
+    name >:: fun _ ->
+    assert_equal expected_output (Player.get_player_word_list player)
+
+  let update_player_score_test (name : string) (player : Player.t) (p : int) (expected_output : int) : test =
+    name >:: fun _ ->
+      let () = (Player.update_score player p) in
+    assert_equal expected_output (Player.get_player_score player)
+
+  let player_test =
+    [
+      new_player_test "check initialize new player" "liam" new_player_liam;
+      new_player_test "check initialize new player" "12345" new_player_1;
+
+      get_player_name_test "get player name liam" new_player_liam "liam";
+      get_player_name_test "get player name integer" new_player_1 "12345";
+
+      get_player_score_test "get player score liam" new_player_liam 0;
+      get_player_score_test "get player score integer" new_player_1 0;
+
+      get_player_word_list_test "word list of initial player should be empty" new_player_liam [];
+
+      update_player_score_test "adding 5 points to liam" new_player_liam 5 5;
+    ]
+
+  (*game state test suite*)
+
+let suite = "test suite for Allchat" >::: List.flatten [ algorithm_test; player_test ]
 let _ = run_test_tt_main suite

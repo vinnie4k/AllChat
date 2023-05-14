@@ -13,28 +13,14 @@ let wpr = 6
 
 let play_round data rnd_num player_num p_array =
   Interface.output_statement ("\nROUND\n   " ^ string_of_int rnd_num ^ " BEGIN!");
-  for pn = 0 to player_num (*player number*) do
-    let round_sentence = Get_data.get_sentence data in
-    let formatted_word_bank =
-      Interface.format_word_bank (Get_data.get_word data wpr)
-    in
-    Interface.output_statement
-      ("\n"
-      ^ Player.get_player_name (Interface.get_player pn p_array)
-      ^ "'s turn:");
-    Interface.output_statement ("\"" ^ round_sentence ^ "\"");
-    (let blanks = Get_data.get_blanks gf round_sentence in
-     Interface.output_statement
-       ("Fill in " ^ (blanks |> string_of_int) ^ " blanks using:\n"
-      (*add correct grammar later*) ^ formatted_word_bank);
-     if rnd_num = 1 then
-       Interface.output_statement
-         "(type your words in the order they should appear in the sentence, \
-          separating the words with spaces)");
-    let response = Interface.output_question "" in
+  let round_sentence = Get_data.get_sentence data in
+  (* for pn = 0 to player_num player number do *)
+    
+    let responses = Interface.run_round 0 data wpr p_array round_sentence rnd_num player_num []
+in Game_state.update_player_scores Game_state.game responses
 
-    Interface.process_response response ""
-  done
+     (* Interface.process_response response ""  *)
+
 
 (** [start_game f] starts the AllChat game in file [f]. *)
 let start_game f =

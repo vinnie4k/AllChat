@@ -7,6 +7,7 @@ type game_data = {
   num_rounds : int;
   num_players : int;
   players : Player.t array;
+  scores : int list;
 }
 (** The abstract data type representing the the game and its state. It includes
     the game mode, score mode, number of players, the player themselves, scores
@@ -26,7 +27,7 @@ val initialize_game : game_mode -> int -> Player.t array -> unit
 (** [initialize_game g_mode n lst] initializes initial_game with [n] number of
     players, each with name in [lst], with the game mode [g_mode] *)
 
-val update_player_scores : game_data ref -> (Player.t * int) list -> unit
+val update_player_scores : game_data ref -> int list -> unit
 (** [update_player_scores game_data player_score_lst] updates the game data with
     new player scores. *)
 
@@ -56,5 +57,5 @@ val get_players : game_data ref -> Player.t array
 (** [get_players game_data] returns the array of players, where array index 0
     corresponds to player 1, array index 2 corresponds to player 2, etc... *)
 
-val get_winner : game_data ref -> string
+(* val get_winner : game_data ref -> string *)
 (** [get_winner game_data] returns the winner of the game by their score *)
