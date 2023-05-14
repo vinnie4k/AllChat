@@ -9,7 +9,7 @@ let gf = "data/" ^ file_name |> Yojson.Basic.from_file |> Get_data.from_json
    round *)
 let wpr = 6
 
-let end_game = failwith "TODO"
+(* let end_game = failwith "TODO" *)
 
 let play_round data rnd_num player_num p_array =
   Interface.output_statement ("\nROUND\n   " ^ string_of_int rnd_num ^ " BEGIN!");
@@ -32,6 +32,7 @@ let play_round data rnd_num player_num p_array =
          "(type your words in the order they should appear in the sentence, \
           separating the words with spaces)");
     let response = Interface.output_question "" in
+
     Interface.process_response response ""
   done
 
@@ -56,9 +57,11 @@ let start_game f =
     ^ "!");
   Game_state.initialize_game game_mode num_players player_list;
   (*play one round test*)
-  for rnd = 0 to Game_state.get_num_rounds Game_state.game do 
-    play_round gf rnd (Game_state.get_num_players Game_state.game) (Game_state.get_players Game_state.game);
-    Interface.output_statement ("\nRound "^ string_of_int rnd ^ "complete!");
+  for rnd = 0 to Game_state.get_num_rounds Game_state.game do
+    play_round gf rnd
+      (Game_state.get_num_players Game_state.game)
+      (Game_state.get_players Game_state.game);
+    Interface.output_statement ("\nRound " ^ string_of_int rnd ^ "complete!");
     Interface.display_scoreboard Game_state.game
   done
 

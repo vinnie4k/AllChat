@@ -58,21 +58,31 @@ let initialize_game g_mode num_p name_array =
   print_endline (string_of_game ())
 
 (*Getters*)
-let get_did_game_end game_data rnd_num = (!game_data.num_rounds) >= rnd_num
-  
-let get_score_total game_data = Array.map Player.get_player_score !game_data.players
+let get_did_game_end game_data rnd_num = !game_data.num_rounds >= rnd_num
 
-let get_score_total_list game_data = Array.map Player.get_player_score !game_data.players |> Array.to_list
+let get_score_total game_data =
+  Array.map Player.get_player_score !game_data.players
 
-(*[max_score_finder] lst is a helper function to find the max score in the round score array*) 
-let rec max_score_finder lst = match lst with | [] -> 0 |
-h :: t -> if h > max_score_finder t then h else max_score_finder t
+let get_score_total_list game_data =
+  Array.map Player.get_player_score !game_data.players |> Array.to_list
 
-(*[find_max_score_index] round_score_total max_score index is a helper function to match the max score with the actual index*) 
-let rec find_max_score_index round_score_total max_score index = if
-round_score_total.(index) = max_score then index else find_max_score_index
-round_score_total max_score (index + 1)
+(*[max_score_finder] lst is a helper function to find the max score in the round
+  score array*)
+let rec max_score_finder lst =
+  match lst with
+  | [] -> 0
+  | h :: t -> if h > max_score_finder t then h else max_score_finder t
 
-let get_winner game_data = Array.get !game_data.players
-(find_max_score_index (get_score_total game_data) (max_score_finder
-(get_score_total_list game_data)) 0) |> Player.get_player_name
+(*[find_max_score_index] round_score_total max_score index is a helper function
+  to match the max score with the actual index*)
+let rec find_max_score_index round_score_total max_score index =
+  if round_score_total.(index) = max_score then index
+  else find_max_score_index round_score_total max_score (index + 1)
+
+let get_winner game_data =
+  Array.get !game_data.players
+    (find_max_score_index
+       (get_score_total game_data)
+       (max_score_finder (get_score_total_list game_data))
+       0)
+  |> Player.get_player_name

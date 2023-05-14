@@ -53,19 +53,47 @@ let format_word_bank bank =
 
 let get_player n arr = arr.(n)
 let words_to_list x = Str.split_delim (Str.regexp " ") x
-let process_response wrd_strng sent_strng = print_string (wrd_strng ^ sent_strng)
 
-let display_scoreboard game = let view_score = Interface.output_question
-    "Type SB to view the current scoreboard or anything else to continue"
-    in match (String.uppercase_ascii view_score) with 
-    | "SB" -> let scores_list = Game_state.get_score_total_list game in 
-    Interface.output_statement ("Current Leaderboard:");
-    for p = 0 to Game_state.get_num_players game do
-      Interface.output_statement ("Player "^string_of_int(p+1)^": "^
-      (Player.get_player_name (Interface.get_player p (Game_state.get_players game)))^
-      " - " ^ string_of_int (List.nth scores_list p)^ " points");
-    done;
-    Interface.output_statement ("\n");
-    (match Interface.output_question
-    "Type anything to continue" with |_ ->() )
-    | _ -> ()
+let rec word_in_list input bank =
+  match input with
+  | h :: t -> List.exists (fun wrd -> wrd = h) bank || word_in_list t bank
+  | [] -> false
+
+let rec process_response game wrd_strng wrd_lst blanks sent_strng =
+  let input_words = words_to_list wrd_strng in
+  if not (List.length input_words = blanks) then
+    process_response game (invalid_input "word") wrd_lst blanks sent_strng
+  else
+    match word_in_list input_words wrd_lst with
+    | false ->
+        process_response game (invalid_input "word") wrd_lst blanks sent_strng
+    | true -> Get_data.calculate_score
+
+(* let make_score_pairs s_list p_array = if not (List.length s_list =
+   Array.length p_array) then raise "players dont all have a score" else let
+   pair_list = [] in for ind = 0 to List.length s_list do pair_list = pair_list
+   @ () done; pair_list *)
+
+let display_scoreboard game =
+  let view_score =
+    output_question
+      "Type SB to view the current scoreboard or anything else to continue"
+  in
+  match String.uppercase_ascii view_score with
+  | "SB" -> (
+      let scores_list = Game_state.get_score_total_list game in
+      output_statement "Current Leaderboard:";
+      for p = 0 to Game_state.get_num_players game do
+        output_statement
+          ("Player "
+          ^ string_of_int (p + 1)
+          ^ ": "
+          ^ Player.get_player_name (get_player p (Game_state.get_players game))
+          ^ " - "
+          ^ string_of_int (List.nth scores_list p)
+          ^ " points")
+      done;
+      output_statement "\n";
+      match output_question "Type anything to continue" with
+      | _ -> ())
+  | _ -> ()
