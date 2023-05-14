@@ -106,11 +106,14 @@ let algorithm_test =
       small_json 100 Get_data.OutOfWords;
     get_word_fail_test
       "get an exception because data size isn't large enough from test_data"
-      test_json 22 Get_data.OutOfWords;
+      test_json 300 Get_data.OutOfWords;
+    get_word_fail_test
+      "get an exception because data size isn't large enough from test_data"
+      test_json 500 Get_data.OutOfWords;
     get_word_fail_test "get an exception because no data exist in empty_data"
       empty_json 1 Get_data.OutOfWords;
-    get_sentence_test "get a sentence from test_data" test_json true;
     get_sentence_test "get a sentence from small_data" small_json true;
+    get_sentence_test "get a sentence from test_data" test_json true;
     get_sentence_fail_test "get a sentence from empty_data" empty_json
       Get_data.OutOfSentences;
     get_blanks_test
