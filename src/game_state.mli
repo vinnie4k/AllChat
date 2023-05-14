@@ -31,6 +31,13 @@ val update_player_scores : game_data ref -> int list -> unit
 (** [update_player_scores game_data player_score_lst] updates the game data with
     new player scores. *)
 
+val wrap_up_game : game_data ref -> unit
+(** [wrap_up_game game_data] updates the game data once it ends. It inputs the
+    scores of the players this game into their permanent record in the player.ml
+    file. It also sets all points this game to 0 so the game can be reused, this
+    is the same function as initialize_game, but we do it twice for safety
+    reasons. *)
+
 val get_did_game_end : game_data ref -> int -> bool
 (** [did_game_end game_data rnd_num] game is whether or not the game finished. *)
 
@@ -53,3 +60,7 @@ val get_players : game_data ref -> Player.t array
 
 val get_winner : game_data ref -> string
 (** [get_winner game_data] returns the winner of the game by their score *)
+
+val get_cumulative_player_score : game_data ref -> int list
+(** [get_cumulative_player_score game_data] returns the winner of the game by
+    their score *)

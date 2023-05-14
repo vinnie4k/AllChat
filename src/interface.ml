@@ -114,3 +114,18 @@ let display_scoreboard game =
       match output_question "Type anything to continue" with
       | _ -> ())
   | _ -> ()
+
+let display_overall_scoreboard game =
+  let scores_list = Game_state.get_cumulative_player_score game in
+  output_statement "\nCumulative Leaderboard for all games:";
+  for p = 0 to Game_state.get_num_players game - 1 do
+    output_statement
+      ("Player "
+      ^ string_of_int (p + 1)
+      ^ ": "
+      ^ Player.get_player_name (get_player p (Game_state.get_players game))
+      ^ " - "
+      ^ string_of_int (List.nth scores_list p)
+      ^ " points")
+  done;
+  output_statement "\n"

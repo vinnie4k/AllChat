@@ -54,7 +54,9 @@ let start_game f =
   Interface.output_statement
     ("\nThe winner of this game is "
     ^ Game_state.get_winner Game_state.game
-    ^ "!")
+    ^ "!");
+  Game_state.wrap_up_game Game_state.game;
+  Interface.display_overall_scoreboard Game_state.game
 
 (** [main ()] prompts for the game to play, then starts it. *)
 let main () =

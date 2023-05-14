@@ -69,3 +69,7 @@ val run_round :
 val display_scoreboard : Game_state.game_data ref -> unit
 (** [display_scoreoard game] displays a formatted scoreboard of each player's
     scores in the game [game]*)
+
+val display_overall_scoreboard : Game_state.game_data ref -> unit
+(** [display_overall_scoreboard game] displays a formatted scoreboard of each
+    player's scores in the game cumulative [game]*)

@@ -39,7 +39,7 @@ let rec func x lst c =
   | [] -> raise (Failure "Not Found")
   | hd :: tl -> if hd = x then c else func x tl (c + 1)
 
-let find x lst = func x lst 0
+let find_list_index x lst = func x lst 0
 (* let rec print_list = function | [] -> () | e :: l -> print_int e;
    print_string " "; print_list l *)
 
@@ -108,6 +108,16 @@ let update_player_scores game_data new_scores =
    players = deref_game_data.players; scores = new_scores; } in game_data :=
    n_game *)
 
+let wrap_up_game game_data =
+  let deref_game_data = !game_data in
+  for i = 0 to deref_game_data.num_players - 1 do
+    Player.update_score
+      deref_game_data.players.(i)
+      (List.nth deref_game_data.scores i)
+  done;
+  let n_game = { deref_game_data with scores = [ 0; 0; 0 ] } in
+  game := n_game
+
 (*Getters*)
 let get_did_game_end game_data rnd_num = !game_data.num_rounds >= rnd_num
 let get_current_scores game_data = !game_data.scores
@@ -118,6 +128,16 @@ let get_players game_data = !game_data.players
 
 let get_winner game_data =
   Player.get_player_name
-    !game_data.players.(find
+    !game_data.players.(find_list_index
                           (max_number_list !game_data.scores)
                           !game_data.scores)
+
+let get_cumulative_player_score game_state =
+  let deref_game_data = !game_state in
+  let player_array = deref_game_data.players in
+  let cumulative_score_array = Array.make (Array.length player_array) 0 in
+  for i = 0 to Array.length player_array - 1 do
+    Array.set cumulative_score_array i
+      (Player.get_player_score deref_game_data.players.(i))
+  done;
+  cumulative_score_array |> Array.to_list
