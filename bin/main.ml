@@ -44,13 +44,17 @@ let start_game f =
     ^ "!");
   Game_state.initialize_game game_mode num_players player_list;
   (*play one round test*)
-  for rnd = 0 to Game_state.get_num_rounds Game_state.game do
+  for rnd = 1 to Game_state.get_num_rounds Game_state.game do
     play_round gf rnd
       (Game_state.get_num_players Game_state.game)
       (Game_state.get_players Game_state.game);
-    Interface.output_statement ("\nRound " ^ string_of_int rnd ^ "complete!");
+    Interface.output_statement ("\nRound " ^ string_of_int rnd ^ " complete!");
     Interface.display_scoreboard Game_state.game
-  done
+  done;
+  Interface.output_statement
+    ("\nThe winner of this game is "
+    ^ Game_state.get_winner Game_state.game
+    ^ "!")
 
 (** [main ()] prompts for the game to play, then starts it. *)
 let main () =

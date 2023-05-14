@@ -18,14 +18,22 @@ let rec names_separated lst =
     | [] -> ""
     | h :: t -> h ^ ", " ^ names_separated t
 
-let max_number_list lst = List.fold_left max min_int lst
+let max_number_list l =
+  match l with
+  | [] -> failwith "None"
+  | h :: t ->
+      let rec helper (seen, rest) =
+        match rest with
+        | [] -> seen
+        | h' :: t' ->
+            let seen' = if h' > seen then h' else seen in
+            let rest' = t' in
+            helper (seen', rest')
+      in
+      helper (h, t)
 
-let rec print_list = function
-  | [] -> ()
-  | e :: l ->
-      print_int e;
-      print_string " ";
-      print_list l
+(* let rec print_list = function | [] -> () | e :: l -> print_int e;
+   print_string " "; print_list l *)
 
 (****** HELPERS END ******)
 
@@ -83,11 +91,8 @@ let initialize_game g_mode num_p name_array =
    initializing*)
 
 let update_player_scores game_data new_scores =
-  print_list new_scores;
   let n_game = { !game_data with scores = new_scores } in
-  print_endline "Score Updated";
-  game := n_game;
-  print_endline (string_of_game ())
+  game := n_game
 
 (* let update_player_score_extra game_data new_scores = let deref_game_data =
    !game_data in let n_game = { g_mode = deref_game_data.g_mode; num_rounds =
@@ -103,5 +108,17 @@ let get_num_rounds game_data = !game_data.num_rounds
 let get_num_players game_data = !game_data.num_players
 let get_players game_data = !game_data.players
 
+exception Failure of string
+
+let rec func x lst c =
+  match lst with
+  | [] -> raise (Failure "Not Found")
+  | hd :: tl -> if hd = x then c else func x tl (c + 1)
+
+let find x lst = func x lst 0
+
 let get_winner game_data =
-  Player.get_player_name !game_data.players.(max_number_list !game_data.scores)
+  Player.get_player_name
+    !game_data.players.(find
+                          (max_number_list !game_data.scores)
+                          !game_data.scores)

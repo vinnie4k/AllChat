@@ -100,7 +100,7 @@ let display_scoreboard game =
   | "SB" -> (
       let scores_list = Game_state.get_current_scores game in
       output_statement "Current Leaderboard:";
-      for p = 0 to Game_state.get_num_players game do
+      for p = 0 to Game_state.get_num_players game - 1 do
         output_statement
           ("Player "
           ^ string_of_int (p + 1)
