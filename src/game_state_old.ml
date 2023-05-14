@@ -1,4 +1,4 @@
-(* open Player
+open Player
 
    type game_mode = | Toxic | Wholesome
 
@@ -47,4 +47,4 @@
    (*modifying functions*) let update_player_score game player_index score =
    Player.update_score (Array.get game.players player_index) score
 
-   let update_round game = game.current_round <- game.current_round + 1 *)
+   let update_round game = game.current_round <- game.current_round + 1

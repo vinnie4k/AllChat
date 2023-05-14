@@ -48,3 +48,7 @@ val words_to_list : string -> string list
 val process_response : string -> string -> unit
 (** [process_response x sentence] processes the user input [x] and [sentence]
     and checks if the number of words is valid *)
+
+val display_scoreboard : Game_state.game_data ref -> unit
+(** [display_scoreoard game] displays a formatted scoreboard of each player's 
+    scores in the game [game]*)

@@ -54,3 +54,18 @@ let format_word_bank bank =
 let get_player n arr = arr.(n)
 let words_to_list x = Str.split_delim (Str.regexp " ") x
 let process_response wrd_strng sent_strng = print_string (wrd_strng ^ sent_strng)
+
+let display_scoreboard game = let view_score = Interface.output_question
+    "Type SB to view the current scoreboard or anything else to continue"
+    in match (String.uppercase_ascii view_score) with 
+    | "SB" -> let scores_list = Game_state.get_score_total_list game in 
+    Interface.output_statement ("Current Leaderboard:");
+    for p = 0 to Game_state.get_num_players game do
+      Interface.output_statement ("Player "^string_of_int(p+1)^": "^
+      (Player.get_player_name (Interface.get_player p (Game_state.get_players game)))^
+      " - " ^ string_of_int (List.nth scores_list p)^ " points");
+    done;
+    Interface.output_statement ("\n");
+    (match Interface.output_question
+    "Type anything to continue" with |_ ->() )
+    | _ -> ()

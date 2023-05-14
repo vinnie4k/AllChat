@@ -25,3 +25,35 @@ val string_of_game : unit -> string
 val initialize_game : game_mode -> int -> Player.t array -> unit
 (** [initialize_game g_mode n lst] initializes initial_game with [n] number of
     players, each with name in [lst], with the game mode [g_mode] *)
+
+val update_player_scores : game_data ref -> (Player.t * int) list -> unit
+(** [update_player_scores game_data player_score_lst] updates the game data with
+    new player scores. *)
+
+val get_did_game_end : game_data ref -> int -> bool 
+(** [did_game_end game_data rnd_num] game is whether or not the game finished. *)
+
+val get_score_total : game_data ref -> int array
+(** [get_score_total game_data] is the total score for all players in an ordered array
+    Example: The value at index 0 of the array corresponds to player 1's score, 
+    the value at index 1 of the array corresponds to player 2's score, etc... *)
+
+val get_score_total_list : game_data ref -> int list
+(** [get_score_total_list game_data] turns the array of total scores into a list of 
+   total scores. *) 
+
+val get_game_mode : game_data ref -> game_mode
+(** [get_game_mode game_data] returns the current game_mode of the game. *) 
+
+val get_num_rounds : game_data ref -> int
+(** [get_num_rounds game_data] returns the total length of the game in rounds. *) 
+
+val get_num_players : game_data ref -> int
+(** [get_num_players game_data] returns the total number of players. *) 
+
+val get_players : game_data ref -> Player.t array
+(** [get_players game_data] returns the array of players, where array index 0 corresponds
+    to player 1, array index 2 corresponds to player 2, etc... *) 
+
+val get_winner : game_data ref -> string
+(** [get_winner game_data] returns the winner of the game by their score *) 

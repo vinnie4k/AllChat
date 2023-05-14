@@ -1,4 +1,4 @@
-(* type game_mode (** The abstract data type representing the the different game
+type game_mode (** The abstract data type representing the the different game
    modes. *)
 
    type score_mode (** The abstract data type representing the the different
@@ -40,4 +40,4 @@
 
    val update_round : t -> unit (** [update_round game round] updates [game]'s
    current round. Call this function whenever you are moving to the next round
-   *) *)
+   *)
