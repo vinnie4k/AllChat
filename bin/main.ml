@@ -9,29 +9,19 @@ let gf = "data/" ^ file_name |> Yojson.Basic.from_file |> Get_data.from_json
    round *)
 let wpr = 6
 
+(* let end_game = failwith "TODO" *)
+
 let play_round data rnd_num player_num p_array =
   Interface.output_statement ("\nROUND\n   " ^ string_of_int rnd_num ^ " BEGIN!");
-  for pn = 0 to player_num (*player number*) do
-    let round_sentence = Get_data.get_sentence data in
-    let formatted_word_bank =
-      Interface.format_word_bank (Get_data.get_word data wpr)
-    in
-    Interface.output_statement
-      ("\n"
-      ^ Player.get_player_name (Interface.get_player pn p_array)
-      ^ "'s turn:");
-    Interface.output_statement ("\"" ^ round_sentence ^ "\"");
-    (let blanks = Get_data.get_blanks gf round_sentence in
-     Interface.output_statement
-       ("Fill in " ^ (blanks |> string_of_int) ^ " blanks using:\n"
-      (*add correct grammar later*) ^ formatted_word_bank);
-     if rnd_num = 1 then
-       Interface.output_statement
-         "(type your words in the order they should appear in the sentence, \
-          separating the words with spaces)");
-    let response = Interface.output_question "" in
-    Interface.process_response response ""
-  done
+  let round_sentence = Get_data.get_sentence data in
+
+  (* for pn = 0 to player_num player number do *)
+  let responses =
+    Interface.run_round 0 data wpr p_array round_sentence rnd_num player_num []
+  in
+  Game_state.update_player_scores Game_state.game responses
+
+(* Interface.process_response response "" *)
 
 (** [start_game f] starts the AllChat game in file [f]. *)
 let start_game f =
@@ -54,7 +44,13 @@ let start_game f =
     ^ "!");
   Game_state.initialize_game game_mode num_players player_list;
   (*play one round test*)
-  play_round gf 1 Game_state.(!game.num_players) Game_state.(!game.players)
+  for rnd = 0 to Game_state.get_num_rounds Game_state.game do
+    play_round gf rnd
+      (Game_state.get_num_players Game_state.game)
+      (Game_state.get_players Game_state.game);
+    Interface.output_statement ("\nRound " ^ string_of_int rnd ^ "complete!");
+    Interface.display_scoreboard Game_state.game
+  done
 
 (** [main ()] prompts for the game to play, then starts it. *)
 let main () =

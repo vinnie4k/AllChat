@@ -29,7 +29,8 @@ val names_separated : string list -> string
     'and'. *)
 
 val invalid_input : string -> string
-(** [invalid_input x] returns a string message for an invalid [x] *)
+(** [invalid_input x] returns a string message for the previously asked question
+    regarding [x] *)
 
 val create_game_mode : string -> Game_state.game_mode
 (** [create_game_mode x] is Some Game_state.game_mode if [x] is a valid game
@@ -45,6 +46,26 @@ val format_word_bank : string list -> string
 val words_to_list : string -> string list
 (** [words_to_list x] converts [x] to a list of strings, separated by a space *)
 
-val process_response : string -> string -> unit
-(** [process_response x sentence] processes the user input [x] and [sentence]
-    and checks if the number of words is valid *)
+(* val process_response : string -> string list -> int -> string -> int list *)
+(* [process_response x word_bank blanks sentence] processes the user input [x]
+   and [sentence] and checks if the number of words is valid and equal to
+   [blanks], as well as if inputted words were part of the given [word_bank] *)
+
+val run_round :
+  int ->
+  Get_data.t ->
+  int ->
+  Player.t array ->
+  string ->
+  int ->
+  int ->
+  string list ->
+  int list
+(**[run_round pn data wpr p_array round_sentence rnd_num player_num response_list]
+   uses accumulator [pn] to record responses in [response_list] of each player
+   until the number of players [player_num] is reached. It displays round
+   information*)
+
+val display_scoreboard : Game_state.game_data ref -> unit
+(** [display_scoreoard game] displays a formatted scoreboard of each player's
+    scores in the game [game]*)

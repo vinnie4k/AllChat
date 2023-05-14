@@ -48,3 +48,12 @@ val calculate_score : t -> string -> string list -> int list
     word_repo[j]. Example:
     [calculate_score test_data "I was ___ down the street." \[“bored”, “iron”\]]
     returns [62, 75] *)
+
+val includes_sentence : t -> string -> bool
+(** [includes_sentence j s] gets a bool depending on if the sentence[s] is part
+    of the word_repo[j]. Example:
+    [includes_sentence test_data "I was ___ down the street."] returns true *)
+
+val includes_word : t -> string -> bool
+(** [includes_word j w] gets a bool depending on if the word[w] is part of the
+    word_repo[j]. Example: [includes_word test_data "binglebell"] returns false *)
