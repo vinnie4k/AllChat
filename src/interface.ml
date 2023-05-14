@@ -98,7 +98,7 @@ let display_scoreboard game =
   in
   match String.uppercase_ascii view_score with
   | "SB" -> (
-      let scores_list = Game_state.get_score_total_list game in
+      let scores_list = Game_state.get_current_scores game in
       output_statement "Current Leaderboard:";
       for p = 0 to Game_state.get_num_players game do
         output_statement

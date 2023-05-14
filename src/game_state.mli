@@ -34,13 +34,7 @@ val update_player_scores : game_data ref -> int list -> unit
 val get_did_game_end : game_data ref -> int -> bool
 (** [did_game_end game_data rnd_num] game is whether or not the game finished. *)
 
-val get_score_total : game_data ref -> int array
-(** [get_score_total game_data] is the total score for all players in an ordered
-    array Example: The value at index 0 of the array corresponds to player 1's
-    score, the value at index 1 of the array corresponds to player 2's score,
-    etc... *)
-
-val get_score_total_list : game_data ref -> int list
+val get_current_scores : game_data ref -> int list
 (** [get_score_total_list game_data] turns the array of total scores into a list
     of total scores. *)
 

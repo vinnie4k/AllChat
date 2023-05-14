@@ -20,6 +20,13 @@ let rec names_separated lst =
 
 let max_number_list lst = List.fold_left max min_int lst
 
+let rec print_list = function
+  | [] -> ()
+  | e :: l ->
+      print_int e;
+      print_string " ";
+      print_list l
+
 (****** HELPERS END ******)
 
 type game_mode =
@@ -56,7 +63,7 @@ let string_of_game () =
       ^ ", " ^ string_of_int num_rounds ^ ", " ^ string_of_int num_players
       ^ ", "
       ^ (get_player_names (Array.to_list players) |> names_separated)
-      ^ ""
+      ^ "}"
 
 let rec make_0_list len lst =
   if List.length lst = len then lst else make_0_list len (0 :: lst)
@@ -76,8 +83,11 @@ let initialize_game g_mode num_p name_array =
    initializing*)
 
 let update_player_scores game_data new_scores =
+  print_list new_scores;
   let n_game = { !game_data with scores = new_scores } in
-  game_data := n_game
+  print_endline "Score Updated";
+  game := n_game;
+  print_endline (string_of_game ())
 
 (* let update_player_score_extra game_data new_scores = let deref_game_data =
    !game_data in let n_game = { g_mode = deref_game_data.g_mode; num_rounds =
@@ -87,13 +97,7 @@ let update_player_scores game_data new_scores =
 
 (*Getters*)
 let get_did_game_end game_data rnd_num = !game_data.num_rounds >= rnd_num
-
-let get_score_total game_data =
-  Array.map Player.get_player_score !game_data.players
-
-let get_score_total_list game_data =
-  Array.map Player.get_player_score !game_data.players |> Array.to_list
-
+let get_current_scores game_data = !game_data.scores
 let get_game_mode game_data = !game_data.g_mode
 let get_num_rounds game_data = !game_data.num_rounds
 let get_num_players game_data = !game_data.num_players
