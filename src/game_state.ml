@@ -1,3 +1,5 @@
+exception Failure of string
+
 (****** HELPERS START ******)
 let rec get_player_names lst =
   match lst with
@@ -32,6 +34,12 @@ let max_number_list l =
       in
       helper (h, t)
 
+let rec func x lst c =
+  match lst with
+  | [] -> raise (Failure "Not Found")
+  | hd :: tl -> if hd = x then c else func x tl (c + 1)
+
+let find x lst = func x lst 0
 (* let rec print_list = function | [] -> () | e :: l -> print_int e;
    print_string " "; print_list l *)
 
@@ -107,15 +115,6 @@ let get_game_mode game_data = !game_data.g_mode
 let get_num_rounds game_data = !game_data.num_rounds
 let get_num_players game_data = !game_data.num_players
 let get_players game_data = !game_data.players
-
-exception Failure of string
-
-let rec func x lst c =
-  match lst with
-  | [] -> raise (Failure "Not Found")
-  | hd :: tl -> if hd = x then c else func x tl (c + 1)
-
-let find x lst = func x lst 0
 
 let get_winner game_data =
   Player.get_player_name
