@@ -108,6 +108,10 @@ let update_player_scores game_data new_scores =
    players = deref_game_data.players; scores = new_scores; } in game_data :=
    n_game *)
 
+let update_game_mode game_data g_mode =
+  let n_game = { !game_data with g_mode } in
+  game := n_game
+
 let wrap_up_game game_data =
   let deref_game_data = !game_data in
   for i = 0 to deref_game_data.num_players - 1 do

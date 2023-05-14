@@ -31,6 +31,10 @@ val update_player_scores : game_data ref -> int list -> unit
 (** [update_player_scores game_data player_score_lst] updates the game data with
     new player scores. *)
 
+val update_game_mode : game_data ref -> game_mode -> unit
+(** [update_game_mode game_mode g_mode] updates the game with the game mode
+    [g_mode] *)
+
 val wrap_up_game : game_data ref -> unit
 (** [wrap_up_game game_data] updates the game data once it ends. It inputs the
     scores of the players this game into their permanent record in the player.ml

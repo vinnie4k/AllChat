@@ -24,6 +24,43 @@ let play_round data rnd_num player_num p_array =
 (* Interface.process_response response "" *)
 
 (** [start_game f] starts the AllChat game in file [f]. *)
+let rec start_game_repeat game_data =
+  Interface.output_statement
+    "Thank you for choosing to play again! Happy round two :)";
+  let game_mode =
+    Interface.create_game_mode
+      (Interface.output_question "Enter the game mode (Toxic or Wholesome): ")
+  in
+  Interface.output_statement
+    ("Welcome back to the game! "
+    ^ (Interface.fetch_player_names
+         (Array.to_list (Game_state.get_players game_data))
+      |> Interface.names_separated)
+    ^ "!");
+  Game_state.update_game_mode game_data game_mode;
+  (*play one round test*)
+  for rnd = 1 to Game_state.get_num_rounds Game_state.game do
+    play_round gf rnd
+      (Game_state.get_num_players Game_state.game)
+      (Game_state.get_players Game_state.game);
+    Interface.output_statement ("\nRound " ^ string_of_int rnd ^ " complete!");
+    Interface.display_scoreboard Game_state.game
+  done;
+  Interface.output_statement
+    ("\nThe winner of this game is "
+    ^ Game_state.get_winner Game_state.game
+    ^ "!");
+  Game_state.wrap_up_game Game_state.game;
+  Interface.display_overall_scoreboard Game_state.game;
+  let output =
+    Interface.output_question
+      "To start a new game, type NEW, otherwise, type END"
+  in
+  match output with
+  | "NEW" -> start_game_repeat Game_state.game
+  | "END" -> ()
+  | _ -> ()
+
 let start_game f =
   Interface.output_statement ("Loading game file " ^ f);
   let game_mode =
@@ -56,7 +93,15 @@ let start_game f =
     ^ Game_state.get_winner Game_state.game
     ^ "!");
   Game_state.wrap_up_game Game_state.game;
-  Interface.display_overall_scoreboard Game_state.game
+  Interface.display_overall_scoreboard Game_state.game;
+  let output =
+    Interface.output_question
+      "To start a new game, type NEW, otherwise, type END"
+  in
+  match output with
+  | "NEW" -> start_game_repeat Game_state.game
+  | "END" -> ()
+  | _ -> ()
 
 (** [main ()] prompts for the game to play, then starts it. *)
 let main () =
