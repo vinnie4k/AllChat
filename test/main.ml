@@ -1,6 +1,19 @@
 open OUnit2
 open Allchat
 
+(** Test plan: for testing, most of the backend functions were tested using
+    OUnit tests, while the ones that needed some kind of user input such as the
+    functions in interface were manually tested. The OUnit tests consists of
+    get_data.ml, game_state.ml, and player.ml. The manually tested ones are the
+    functions in interface.ml and bin/main.ml. The backend functions that were
+    tested is all glass box tests because the person that wrote the functions
+    was the same person that tested, so they already knew what output to expect.
+    This made it easy for them to locate the errors because they knew where the
+    error is, whenever a function isn't working as intended. Because the user
+    has to input certain information, we had to manually test those, so we did
+    those by playing the game ourselves and writing inputs that we think the
+    user might say and checking if the game will act how we think it would. *)
+
 let data_dir_prefix = "data" ^ Filename.dir_sep
 let test = Yojson.Basic.from_file (data_dir_prefix ^ "test_data.json")
 let small = Yojson.Basic.from_file (data_dir_prefix ^ "small_data.json")
@@ -103,10 +116,16 @@ let algorithm_test =
       small_json 3 Get_data.OutOfWords;
     get_word_fail_test
       "get an exception because data size isn't large enough from small_data"
+      small_json 5 Get_data.OutOfWords;
+    get_word_fail_test
+      "get an exception because data size isn't large enough from small_data"
       small_json 100 Get_data.OutOfWords;
     get_word_fail_test
       "get an exception because data size isn't large enough from test_data"
       test_json 300 Get_data.OutOfWords;
+    get_word_fail_test
+      "get an exception because data size isn't large enough from test_data"
+      test_json 200 Get_data.OutOfWords;
     get_word_fail_test
       "get an exception because data size isn't large enough from test_data"
       test_json 500 Get_data.OutOfWords;
@@ -167,10 +186,25 @@ let algorithm_test =
       test_json "That ice cream was so ___!" [ "dance" ]
       "That ice cream was so dance!";
     add_words_test
+      "adding the word gentle to the sentence Crap, I ___ my homework again. \
+       from test_json"
+      test_json "Crap, I ___ my homework again." [ "gentle" ]
+      "Crap, I gentle my homework again.";
+    add_words_test
       "adding the word playing to the sentence The librarian ___ the books. \
        from test_json"
       test_json "The librarian ___ the books." [ "playing" ]
       "The librarian playing the books.";
+    add_words_test
+      "adding the word harsh to the sentence There is a piece of ___ on the \
+       books. from test_json"
+      test_json "There is a piece of ___ on the books." [ "harsh" ]
+      "There is a piece of harsh on the books.";
+    add_words_test
+      "adding the word impatient to the sentence In a full ___ it feels so \
+       empty. from test_json"
+      test_json "In a full ___ it feels so empty." [ "impatient" ]
+      "In a full impatient it feels so empty.";
     add_words_fail_test
       "get an exception when attempting to add the word bulldog to the \
        sentence Did you see the ___ run across? from test_json"
@@ -197,17 +231,57 @@ let algorithm_test =
        in test_data."
       test_json "Did you see the ___ run across?" [ "iron"; "bubbly" ] "10050";
     calculate_score_test
+      "gets the scores for The librarian ___ the books. with [careless, \
+       impatient] in test_data."
+      test_json "The librarian ___ the books."
+      [ "careless"; "impatient" ]
+      "5050";
+    calculate_score_test
+      "gets the scores for Talk about the ___ nose I've ever seen. with [lazy] \
+       in test_data."
+      test_json "Talk about the ___ nose I've ever seen." [ "lazy" ] "100";
+    calculate_score_test
+      "gets the scores for The librarian ___ the books. with [careless, \
+       impatient, imitate] in test_data."
+      test_json "The librarian ___ the books."
+      [ "careless"; "impatient"; "imitate" ]
+      "505075";
+    calculate_score_test
       "gets the scores for How did she ___ the raccoon? with [running, braids, \
        curious] in test_data."
       test_json "How did she ___ the raccoon?"
       [ "running"; "braids"; "curious" ]
       "1007550";
     calculate_score_test
+      "gets the scores for The librarian ___ the books. with [careless, \
+       impatient, imitate, imitate] in test_data."
+      test_json "The librarian ___ the books."
+      [ "careless"; "impatient"; "imitate"; "imitate" ]
+      "50507575";
+    calculate_score_test
+      "gets the scores for The librarian ___ the books. with [careless, \
+       impatient, imitate, imitate, fool] in test_data."
+      test_json "The librarian ___ the books."
+      [ "careless"; "impatient"; "imitate"; "imitate"; "fool" ]
+      "5050757550";
+    calculate_score_test
+      "gets the scores for Bruh this bird looks ___ running like that. with \
+       [victorious, rude, meat, marriage] in test_data."
+      test_json "Bruh this bird looks ___ running like that."
+      [ "victorious"; "rude"; "meat"; "marriage" ]
+      "75757550";
+    calculate_score_test
       "gets the scores for How did she ___ the raccoon? with [running, braids, \
        curious, running, braids, curious] in test_data."
       test_json "How did she ___ the raccoon?"
       [ "running"; "braids"; "curious"; "running"; "braids"; "curious" ]
       "10075501007550";
+    calculate_score_test
+      "gets the scores for The librarian ___ the books. with [careless, \
+       impatient, imitate, imitate, fool, running] in test_data."
+      test_json "The librarian ___ the books."
+      [ "careless"; "impatient"; "imitate"; "imitate"; "fool"; "running" ]
+      "5050757550100";
     calculate_score_fail_test
       "gets the exception for How did she ___ the samurai sword? with \
        [running, braids, curious] in test_data."
@@ -287,6 +361,10 @@ let algorithm_test =
       "check if I hope you ___ into the wall! is a sentence in test_data."
       test_json "I hope you ___ into the wall!" true;
     includes_sentence_test
+      "check if I hope you ___ into the wall. is a sentence in test_data. This \
+       sentence is actually in test_data but the punctuation is different."
+      test_json "I hope you ___ into the wall." false;
+    includes_sentence_test
       "check if The librarian ___ the books. is a sentence in test_data."
       test_json "The librarian ___ the books." true;
     includes_sentence_test
@@ -298,6 +376,9 @@ let algorithm_test =
     includes_sentence_test
       "check if The play was so much ___ today! is a sentence in test_data."
       test_json "The play was so much ___ today!" true;
+    includes_sentence_test
+      "check if I hate this assignment. is a sentence in test_data." test_json
+      "I hate this assignment." false;
     includes_sentence_test
       "check if Can ___ please quiet down! is a sentence in test_data."
       test_json "Can ___ please quiet down!" true;
@@ -330,6 +411,16 @@ let algorithm_test =
       "braids" true;
     includes_word_test "check if dance is a word in test_data." test_json
       "dance" true;
+    includes_word_test "check if history is a word in test_data." test_json
+      "history" true;
+    includes_word_test "check if aloof is a word in test_data." test_json
+      "aloof" true;
+    includes_word_test "check if bruh is a word in test_data." test_json "bruh"
+      false;
+    includes_word_test "check if idiot is a word in test_data." test_json
+      "idiot" false;
+    includes_word_test "check if dishonesty is a word in test_data." test_json
+      "dishonesty" true;
   ]
 
 (*player test suite*)
