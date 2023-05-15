@@ -95,11 +95,11 @@ let start_game f =
   in
   let num_players =
     Interface.create_num_players
-      (Interface.output_question "How many people are playing? (1 - 8)")
+      (Interface.output_question "How many people are playing? (2 - 8)")
   in
   let num_rounds =
     Interface.create_num_rounds
-      (Interface.output_question "How many rounds do you want to play? (1 - 8)")
+      (Interface.output_question "How many rounds do you want to play? (2 - 8)")
   in
   let player_list = Array.make num_players (Player.new_player "|*_*|") in
   for i = 0 to num_players - 1 do
