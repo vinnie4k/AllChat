@@ -464,6 +464,7 @@ let new_player_enjie = Player.new_player "enjie"
 let new_player_rando1 = Player.new_player "rando1"
 let new_player_rando2 = Player.new_player "rando2"
 let new_player_rando3 = Player.new_player "rando3"
+let new_player_rando4 = Player.new_player "rando4"
 
 let new_player_test (name : string) (n : string) (expected_output : Player.t) :
     test =
@@ -533,7 +534,7 @@ let player_test =
     update_player_score_three_test "adding 1000 and 3000 and 3000 is 4000 pts"
       new_player_rando1 1000 3000 3000 7000;
     update_player_score_three_test "adding 1 and 1 and 1 is 3 pts"
-      new_player_rando1 1 1 1 3;
+      new_player_rando4 1 1 1 3;
     update_player_score_three_test "adding 2000 and -4000 and 1000 is -1000 pts"
       new_player_rando2 2000 (-4000) 1000 (-1000);
   ]
@@ -662,18 +663,88 @@ let interface_test =
       "testing valid input of 123 (not in json and not word bank)" toxic_json
       [ "123" ] toxic_bank1 false;
   ]
+
 (*game state test suite*)
+let new_player1_game_state = Player.new_player "player1"
+let new_player2_game_state = Player.new_player "player2"
 
 let () =
   Game_state.initialize_game Game_state.Toxic 2
-    [| new_player_liam; new_player_vin |]
+    [| new_player1_game_state; new_player2_game_state |]
+
+let get_gf_helper file_name =
+  "data/" ^ file_name |> Yojson.Basic.from_file |> Get_data.from_json
+
+let get_did_game_end_test (name : string) (current_round : int)
+    (expected_output : bool) : test =
+  name >:: fun _ ->
+  assert_equal expected_output
+    (Game_state.get_did_game_end Game_state.game current_round)
 
 let get_current_score_test (name : string) (expected_output : int list) : test =
   name >:: fun _ ->
   assert_equal expected_output (Game_state.get_current_scores Game_state.game)
 
+let get_game_mode_test (name : string) (expected_output : Game_state.game_mode)
+    : test =
+  name >:: fun _ ->
+  assert_equal expected_output (Game_state.get_game_mode Game_state.game)
+
+let get_gf_test (name : string) (expected_output : Get_data.t) : test =
+  name >:: fun _ ->
+  assert_equal expected_output (Game_state.get_gf Game_state.game)
+
+let get_num_rounds_test (name : string) (expected_output : int) : test =
+  name >:: fun _ ->
+  assert_equal expected_output
+    (Game_state.get_num_rounds Game_state.game)
+    ~printer:string_of_int
+
+let get_num_players_test (name : string) (expected_output : int) : test =
+  name >:: fun _ ->
+  assert_equal expected_output
+    (Game_state.get_num_players Game_state.game)
+    ~printer:string_of_int
+
+let get_players_test (name : string) (expected_output : Player.t array) : test =
+  name >:: fun _ ->
+  assert_equal expected_output (Game_state.get_players Game_state.game)
+
+let get_winner_test (name : string) (expected_output : string) : test =
+  name >:: fun _ ->
+  assert_equal expected_output (Game_state.get_winner Game_state.game)
+    ~printer:(fun x -> x)
+
+let get_rankings_tests (name : string) (expected_output : string) : test =
+  name >:: fun _ ->
+  assert_equal expected_output (Game_state.get_rankings Game_state.game)
+    ~printer:(fun x -> x)
+
+let get_cumulative_player_score (name : string) (expected_output : int list) :
+    test =
+  name >:: fun _ ->
+  assert_equal expected_output
+    (Game_state.get_cumulative_player_score Game_state.game)
+    ~printer:(List.fold_left (fun acc x -> acc ^ string_of_int x ^ " ") "")
+
 let game_state_tests =
-  [ get_current_score_test "score of new game should be 0s" [ 0; 0 ] ]
+  [
+    (* Tests for correct initialization*)
+    get_did_game_end_test "game did not end for initial game" 0 false;
+    get_current_score_test "score of new game should be 0s" [ 0; 0 ];
+    get_game_mode_test "score mode of new game should be toxic" Game_state.Toxic;
+    get_gf_test "game file for initial game test"
+      (get_gf_helper "toxic_data.json");
+    get_num_rounds_test "new game round should be 3" 3;
+    get_num_players_test "new game round should be 2" 2;
+    get_players_test "new game list of players should be liam and vin"
+      [| new_player1_game_state; new_player2_game_state |];
+    get_winner_test "new game winner should be vin" "player1";
+    get_rankings_tests "new game ranking should be vin then liam"
+      "player2 player1 ";
+    get_cumulative_player_score "cumulative for initial game should be 0s"
+      [ 0; 0 ];
+  ]
 
 let suite =
   "test suite for Allchat"

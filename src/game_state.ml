@@ -88,13 +88,13 @@ let string_of_game () =
 let rec make_0_list len lst =
   if List.length lst = len then lst else make_0_list len (0 :: lst)
 
-let get_gf file_name =
+let get_gf_helper file_name =
   "data/" ^ file_name |> Yojson.Basic.from_file |> Get_data.from_json
 
 let find_game_file g_mode =
   match g_mode with
-  | Toxic -> get_gf "toxic_data.json"
-  | Wholesome -> get_gf "wholesome_data.json"
+  | Toxic -> get_gf_helper "toxic_data.json"
+  | Wholesome -> get_gf_helper "wholesome_data.json"
 
 let initialize_game g_mode num_p name_array =
   game :=
@@ -150,7 +150,7 @@ let wrap_up_game game_data =
   game := n_game
 
 (*Getters*)
-let get_did_game_end game_data rnd_num = !game_data.num_rounds >= rnd_num
+let get_did_game_end game_data rnd_num = !game_data.num_rounds <= rnd_num
 let get_current_scores game_data = !game_data.scores
 let get_game_mode game_data = !game_data.g_mode
 let get_gf game_data = !game_data.game_file
