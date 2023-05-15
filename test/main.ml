@@ -543,17 +543,28 @@ let player_list_cool =
   [ new_player_liam; new_player_charlie; new_player_enjie; new_player_vin ]
 
 let one_player_list = [ new_player_vin ]
+let toxic_bank1 = [ "coach"; "science"; "meat"; "family"; "thanks" ]
+let toxic_bank2 = [ "coach"; "plan"; "meat"; "laugh"; "map" ]
 
 let fetch_names_test (name : string) (player_lst : Player.t list)
     (expected_output : string list) : test =
   name >:: fun _ ->
-  assert_equal expected_output (Interface.fetch_player_names player_lst)
+  assert_equal expected_output
+    (Interface.fetch_player_names player_lst)
+    ~printer:(List.fold_left (fun acc x -> acc ^ ", " ^ x) "")
 
 let names_separated_test (name : string) (name_lst : string list)
     (expected_output : string) : test =
   name >:: fun _ ->
   assert_equal expected_output (Interface.names_separated name_lst)
     ~printer:(fun x -> x)
+
+let check_valid_input_test (name : string) (repo : Get_data.t)
+    (input : string list) (bank : string list) (expected_output : bool) : test =
+  name >:: fun _ ->
+  assert_equal expected_output
+    (Interface.check_valid_input repo input bank)
+    ~printer:string_of_bool
 
 let create_game_mode_test (name : string) (input : string)
     (expected_output : Game_state.game_mode) : test =
@@ -571,24 +582,33 @@ let create_num_players_test (name : string) (input : string)
     (Interface.create_num_players input)
     ~printer:string_of_int
 
-(* let create_format_word_bank_test (name : string) (input : string list)
-   (expected_output : string) : test = name >:: fun _ -> assert_equal
-   expected_output (Interface.format_word_bank input) ~printer:(fun x -> x) *)
+let create_format_word_bank_test (name : string) (input : string list)
+    (expected_output : string) : test =
+  name >:: fun _ ->
+  assert_equal expected_output (Interface.format_word_bank input)
+    ~printer:(fun x -> x)
+
+let words_to_list_test (name : string) (input : string)
+    (expected_output : string list) : test =
+  name >:: fun _ ->
+  assert_equal expected_output
+    (Interface.words_to_list input)
+    ~printer:(List.fold_left (fun acc x -> acc ^ ", " ^ x) "")
 
 let interface_test =
   [
     fetch_names_test "testing list of players Liam, Charlie, Enjie, Vin"
       player_list_cool
-      [ "Liam"; "Charlie"; "Enjie"; "Vin" ];
-    fetch_names_test "testing one player list" one_player_list [ "Vin" ];
+      [ "liam"; "charlie"; "enjie"; "vin" ];
+    fetch_names_test "testing one player list" one_player_list [ "vin" ];
     fetch_names_test "testing empty list" [] [];
     names_separated_test "testing separated 4 names list"
       [ "Liam"; "Charlie"; "Enjie"; "Vin" ]
-      "Liam, Charlie, Enjie, Vin";
+      "Liam, Charlie, Enjie and Vin";
     names_separated_test "testing separating empty list" [] "";
     names_separated_test "testing separated 2 names list" [ "Liam"; "Charlie" ]
       "Liam and Charlie";
-    names_separated_test "testing separated 1 names list" [ "Liam" ] "Charlie";
+    names_separated_test "testing separated 1 names list" [ "Liam" ] "Liam";
     create_game_mode_test "testing game mode input wholesome" "wholesome"
       Game_state.Wholesome;
     create_game_mode_test "testing game mode input w" "w" Game_state.Wholesome;
@@ -611,16 +631,53 @@ let interface_test =
       Game_state.Toxic;
     create_num_players_test "testing num players input" "1" 1;
     create_num_players_test "testing num players input" "99999" 99999;
+    create_format_word_bank_test "test format word bank on 1 long" [ "word" ]
+      "word";
+    create_format_word_bank_test "test format word bank on 3 long"
+      [ "word3"; "word2"; "word" ]
+      "word | word2 | word3";
+    create_format_word_bank_test "test format word bank on 6 long"
+      [ "word6"; "word5"; "word4"; "word3"; "word2"; "word" ]
+      "word | word2 | word3 | word4 | word5 | word6";
+    words_to_list_test "testing word with lots of spaces" "Liam is really cool"
+      [ "Liam"; "is"; "really"; "cool" ];
+    words_to_list_test "testing one word" "Liam" [ "Liam" ];
+    words_to_list_test "testing one word" "Liam cool" [ "Liam"; "cool" ];
+    words_to_list_test "testing word with lots of spaces" "Liam is really cool"
+      [ "Liam"; "is"; "really"; "cool" ];
+    check_valid_input_test "testing valid input of meat in bank1" toxic_json
+      [ "meat" ] toxic_bank1 true;
+    check_valid_input_test
+      "testing valid input of family in bank2 (in json but not word bank)"
+      toxic_json [ "family" ] toxic_bank2 false;
+    check_valid_input_test
+      "testing valid input of Liam in bank2 (not in json and not word bank)"
+      toxic_json [ "Liam" ] toxic_bank2 false;
+    check_valid_input_test "testing valid input of plan" toxic_json [ "plan" ]
+      toxic_bank2 true;
+    check_valid_input_test
+      "testing invalid input of no (not in json and not word bank)" toxic_json
+      [ "asdasd" ] toxic_bank1 false;
+    check_valid_input_test
+      "testing valid input of 123 (not in json and not word bank)" toxic_json
+      [ "123" ] toxic_bank1 false;
   ]
 (*game state test suite*)
 
-(* let new_game_data_test (name : string) (g_mode : Game_state.game_mode) (num_p
-   : int) (name_array : Player.t array) (expected_output : Game_state.game_data)
-   : test = name >:: fun _ -> assert_equal expected_output (let n =
-   Game_state.initialize_game g_mode num_p name_array) *)
+let () =
+  Game_state.initialize_game Game_state.Toxic 2
+    [| new_player_liam; new_player_vin |]
+
+let get_current_score_test (name : string) (expected_output : int list) : test =
+  name >:: fun _ ->
+  assert_equal expected_output (Game_state.get_current_scores Game_state.game)
+
+let game_state_tests =
+  [ get_current_score_test "score of new game should be 0s" [ 0; 0 ] ]
 
 let suite =
   "test suite for Allchat"
-  >::: List.flatten [ algorithm_test; player_test; interface_test ]
+  >::: List.flatten
+         [ algorithm_test; player_test; interface_test; game_state_tests ]
 
 let _ = run_test_tt_main suite

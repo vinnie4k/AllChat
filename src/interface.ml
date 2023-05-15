@@ -8,7 +8,10 @@ let output_statement text =
 let output_question text =
   ANSITerminal.print_string [ question_color ] ("\n" ^ text ^ "\n");
   print_string "> ";
-  read_line ()
+  let input = read_line () in
+  match input with
+  | "#quit" -> failwith "Game Quitted"
+  | _ -> input
 
 let create_player p =
   Player.new_player

@@ -28,6 +28,11 @@ val names_separated : string list -> string
     a comma. If there are only two players, then the strings are separated by
     'and'. *)
 
+val check_valid_input : Get_data.t -> string list -> string list -> bool
+(** [check_valid_input repo input bank] is a bool that evaluates to true if the
+    users input [input] consists of words that are valid in the word repo [repo]
+    and in the given word bank [bank] *)
+
 val invalid_input : string -> string
 (** [invalid_input x] returns a string message for the previously asked question
     regarding [x] *)
@@ -54,11 +59,6 @@ val format_word_bank : string list -> string
 
 val words_to_list : string -> string list
 (** [words_to_list x] converts [x] to a list of strings, separated by a space *)
-
-(* val process_response : string -> string list -> int -> string -> int list *)
-(* [process_response x word_bank blanks sentence] processes the user input [x]
-   and [sentence] and checks if the number of words is valid and equal to
-   [blanks], as well as if inputted words were part of the given [word_bank] *)
 
 val run_round :
   int ->

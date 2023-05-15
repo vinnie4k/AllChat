@@ -81,6 +81,18 @@ let start_game f =
       |> Interface.names_separated)
     ^ "!");
   Game_state.initialize_game game_mode num_players player_list;
+  Interface.output_statement
+    ("\nHey, "
+    ^ (Interface.fetch_player_names (Array.to_list player_list)
+      |> Interface.names_separated)
+    ^ "!" ^ "\n " ^ "\nHere is a quick guide to this game:"
+    ^ "\n\
+       1. At any point of the game, if you want to quit the game, just type \
+       #quit."
+    ^ "\n\
+       2. This game intelligently grades your responses against other players, \
+       so please try your best!."
+    ^ "\n3. Lastly, don't take it too seriously and have fun :).");
 
   (*playing rounds*)
   for rnd = 1 to Game_state.get_num_rounds Game_state.game do
@@ -110,14 +122,12 @@ let start_game f =
 
 (** [main ()] prompts for the game to play, then starts it. *)
 let main () =
+  Interface.output_statement
+    "\nWelcome to AllChat, the game where we rate your toxicity ☠️.";
   let output =
     Interface.output_question
       "Please enter the name of the game file you want to load:"
   in
-
-  Interface.output_statement
-    "\nWelcome to AllChat, the game where we rate your toxicity ☠️.";
-
   match output with
   | exception End_of_file -> ()
   | file_name -> start_game (Interface.data_dir_prefix ^ file_name ^ ".json")
