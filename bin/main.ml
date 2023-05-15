@@ -157,20 +157,20 @@ let start_game f =
 let rec load_game_file output =
   match output with
   | exception End_of_file -> ()
-  | file_name -> (
+  | file_name ->
       if Sys.file_exists (Interface.data_dir_prefix ^ file_name ^ ".json") then
         start_game (Interface.data_dir_prefix ^ file_name ^ ".json")
-      else
+      else (
         Interface.output_statement
           ("The provided game file " ^ output
          ^ " does not exist. Please try again.");
-      let output =
-        Interface.output_question
-          "Please enter the name of the game file you want to load:"
-      in
-      match output with
-      | exception End_of_file -> ()
-      | file_name -> load_game_file file_name)
+        let output =
+          Interface.output_question
+            "Please enter the name of the game file you want to load:"
+        in
+        match output with
+        | exception End_of_file -> ()
+        | file_name -> load_game_file file_name)
 
 (** [main ()] prompts for the game to play, then starts it. *)
 let main () =
