@@ -24,7 +24,7 @@ demo-video-url: ""
 # Write a short, attention-grabbing description of your project.
 desc: >
   Welcome to AllChat, a cards against humanity variation but with a hint
-  of toxicity. This game can be played among 2-8 players. Given a collection of
+  of toxicity. This game can be played among 1-8 players. Given a collection of
   words, organize them in the most toxic way possible and be given a rating
   score. May the most toxic person win! (We also have a wholesome game mode if 
   insulting isn't your thing!)

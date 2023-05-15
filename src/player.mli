@@ -1,9 +1,16 @@
+(** Representation of dynamic player state.
+
+    This module represents the player of the game. It consists of building
+    blocks for creating a player, such as their name, score, and word list. In
+    addition, this module provides ways to access these variables as well as
+    ways to modify/update them. *)
+
 type t
 (** The abstract type of values representing a player *)
 
 val new_player : string -> t
-(** [new_player n] is the player with the name n, cumulative score 0, and an emtpy set of
-    words *)
+(** [new_player n] is the player with the name n, cumulative score 0, and an
+    emtpy set of words *)
 
 val get_player_name : t -> string
 (** [get_player_name p] is the name of the player *)

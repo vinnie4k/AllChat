@@ -51,6 +51,7 @@ let create_custom_game player_input =
   | "yas" -> true
   | "yep" -> true
   | "custom" -> true
+  | "c" -> true
   | _ -> false
 
 let rec create_game_mode player_input =
@@ -60,7 +61,7 @@ let rec create_game_mode player_input =
   | "w" -> Game_state.Wholesome
   | "toxic" -> Game_state.Toxic
   | "t" -> Game_state.Toxic
-  | "shut the fuck up" -> Game_state.Toxic
+  | "shut up" -> Game_state.Toxic
   | _ -> create_game_mode (invalid_input "game mode")
 
 let rec create_num_players player_input =
@@ -83,11 +84,15 @@ let rec ask_instructions player_input =
   if
     String.lowercase_ascii player_input <> "yes"
     && String.lowercase_ascii player_input <> "no"
+    && String.lowercase_ascii player_input <> "y"
+    && String.lowercase_ascii player_input <> "n"
   then ask_instructions (invalid_input "input")
   else
     try
       if String.lowercase_ascii player_input = "yes" then true
+      else if String.lowercase_ascii player_input = "y" then true
       else if String.lowercase_ascii player_input = "no" then false
+      else if String.lowercase_ascii player_input = "n" then false
       else ask_instructions player_input
     with _ -> ask_instructions (invalid_input "input")
 
@@ -135,12 +140,8 @@ let rec run_round pn data wpr p_array round_sentence rnd_num player_num
     (let blanks = Get_data.get_blanks data round_sentence in
      output_statement
        ("Fill in " ^ (blanks |> string_of_int) ^ " blanks using:\n"
-      (*add correct grammar later*) ^ formatted_word_bank);
-     if rnd_num = 1 then
-       output_statement
-         (* "(type your words in the order they should appear in the sentence, \
-            separating the words with spaces)"); *)
-         "(type a single word with no spaces)");
+      ^ formatted_word_bank);
+     if rnd_num = 1 then output_statement "(type a single word with no spaces)");
     let response = String.lowercase_ascii (output_question "") in
     let res_wrd_list = words_to_list response in
     if check_valid_input data res_wrd_list bank_list then
@@ -157,18 +158,6 @@ let rec run_round pn data wpr p_array round_sentence rnd_num player_num
       run_round (pn + 1) data wpr p_array round_sentence rnd_num player_num
         (response_list @ [ new_response_head ])
 
-(* let rec process_response game wrd_strng wrd_lst blanks sent_strng = let
-   input_words = words_to_list wrd_strng in if not (List.length input_words =
-   blanks) then process_response game (invalid_input "word") wrd_lst blanks
-   sent_strng else match word_in_list input_words wrd_lst with | false ->
-   process_response game (invalid_input "word") wrd_lst blanks sent_strng | true
-   -> (*Get_data.calculate_score file*) [ 1; 2 ] *)
-
-(* let make_score_pairs s_list p_array = if not (List.length s_list =
-   Array.length p_array) then raise "players dont all have a score" else let
-   pair_list = [] in for ind = 0 to List.length s_list do pair_list = pair_list
-   @ () done; pair_list *)
-
 let display_scoreboard game =
   let view_score =
     output_question
@@ -177,7 +166,7 @@ let display_scoreboard game =
   match String.uppercase_ascii view_score with
   | "SB" -> (
       let scores_list = Game_state.get_current_scores game in
-      output_statement "Current Leaderboard:";
+      output_statement "Current Scoreboard:";
       for p = 0 to Game_state.get_num_players game - 1 do
         output_statement
           ("Player "
@@ -193,16 +182,9 @@ let display_scoreboard game =
       | _ -> ())
   | _ -> ()
 
-(* let display_end_game_scoreboard game rankings = let scores_list =
-   Game_state.get_cumulative_player_score game in output_statement "\nCumulative
-   Leaderboard for all games:"; for p = 0 to Game_state.get_num_players game - 1
-   do output_statement ("Player " ^ string_of_int (p + 1) ^ ": " ^ rankings.(p)
-   ^ " - " ^ string_of_int (List.nth scores_list p) ^ " points") done;
-   output_statement "\n" *)
-
 let display_overall_scoreboard game =
   let scores_list = Game_state.get_cumulative_player_score game in
-  output_statement "\nCumulative Leaderboard for all games:";
+  output_statement "\nCumulative Scoreboard for all games:";
   for p = 0 to Game_state.get_num_players game - 1 do
     output_statement
       ("Player "
@@ -215,13 +197,25 @@ let display_overall_scoreboard game =
   done;
   output_statement "\n"
 
+let display_overall_ranking rank_name_tuple =
+  output_statement "\nCumulative rankings for all games:";
+  for p = 0 to List.length rank_name_tuple - 1 do
+    output_statement
+      (fst (List.nth rank_name_tuple p) ^ " " ^ snd (List.nth rank_name_tuple p))
+  done;
+  output_statement "\n"
+
 let rec ask_credits player_input =
   let lowercased_input = String.lowercase_ascii player_input in
-  if lowercased_input <> "yes" && lowercased_input <> "no" then
-    ask_credits (invalid_input "input (yes or no)")
+  if
+    lowercased_input <> "yes" && lowercased_input <> "no"
+    && lowercased_input <> "y" && lowercased_input <> "n"
+  then ask_credits (invalid_input "input (yes or no)")
   else
     try
       if lowercased_input = "yes" then true
+      else if lowercased_input = "y" then true
       else if lowercased_input = "no" then false
+      else if lowercased_input = "n" then false
       else ask_credits player_input
     with _ -> ask_credits (invalid_input "input (yes or no)")
