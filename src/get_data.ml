@@ -74,11 +74,6 @@ type base = { mutable used : int list }
 
 (* helper function for get_word *)
 let word_base = { used = [] }
-
-(* debugging function that I might need *)
-(* let rec print_words lst = match lst with | [] -> print_string "done" | h :: t
-   -> print_words t; h |> string_of_int |> print_string *)
-
 let still_words repo = List.length repo.words - List.length word_base.used > 0
 
 let rec check_word_dup int upper =
@@ -94,9 +89,6 @@ let rec get_word_helper repo int str_lst =
     word_base.used <- this_int :: word_base.used;
     get_word_helper repo (int - 1) (word.term :: str_lst))
   else raise OutOfWords
-(* shouldn't get duplicates now, but need to test *)
-(* let word = List.length repo.words |> Random.int |> List.nth repo.words in
-   get_word_helper repo (int - 1) (word.term :: str_lst) *)
 
 (** get_word function *)
 let get_word repo int = get_word_helper repo int []
@@ -132,8 +124,6 @@ let get_sentence repo =
     sentence_base.used <- this_int :: sentence_base.used;
     sentence.sentence)
   else raise OutOfSentences
-(* let sentence = List.length repo.sentences |> Random.int |> List.nth
-   repo.sentences in sentence.sentence *)
 
 (** helper function for includes_sentence *)
 let rec check_sentence json sentence =

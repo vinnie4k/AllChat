@@ -1,3 +1,11 @@
+(** Representation of word and sentence data.
+
+    This module represents the sentence and word data as provided by one of two
+    default json files, or the user's custom file. Get_data pulls data from the
+    json when requested and formats/unformats it to be sent between modules. The
+    module also contains the score calculating algorithm based on data contained
+    in the json file.*)
+
 type t
 (** The abstract data type representing the words_repo. *)
 

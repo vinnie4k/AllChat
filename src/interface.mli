@@ -1,3 +1,12 @@
+(** Representation of user interface output and input handling.
+
+    This module represents the questions and statements to be outputted to users
+    including prompting game mode, number of players, and player names.
+    Functions are provided to output word banks and sentences to players then
+    process their responses. Interface passes all of this user input data to
+    other modules such as Game_state to be stored or used to calculate player
+    scores and rankings. *)
+
 val data_dir_prefix : string
 (** [data_dir_prefix] is the data directory prefix *)
 
@@ -54,6 +63,10 @@ val create_num_rounds : string -> int
 (** [create_num_rounds x] is an int created from the player's new response [x]
     after an invalid one. Continues to request input until one is valid.*)
 
+val ask_instructions : string -> bool
+(** [ask_instructions x] asks the user whether or not they would like to view
+    the instructions. Returns true if [x] is 'yes' or false if [x] is 'no' *)
+
 val get_player : int -> Player.t array -> Player.t
 (** [get_player n arr] is the player at index [n] in [arr] *)
 
@@ -86,3 +99,11 @@ val display_scoreboard : Game_state.game_data ref -> unit
 val display_overall_scoreboard : Game_state.game_data ref -> unit
 (** [display_overall_scoreboard game] displays a formatted scoreboard of each
     player's scores in the game cumulative [game] *)
+
+val display_overall_ranking : (string * string) list -> unit
+(** [display_overall_ranking rank_name_tuple] displays a formatted rankings of
+    each player's scores in the game cumulative game *)
+
+val ask_credits : string -> bool
+(** [ask_credits x] asks the user whether or not they would like to view the
+    credits. Returns true if [x] is 'yes' or false if [x] is 'no' *)

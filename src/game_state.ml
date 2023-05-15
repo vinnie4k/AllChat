@@ -1,6 +1,5 @@
 open Stdlib
 
-(****** HELPERS START ******)
 let rec get_player_names lst =
   match lst with
   | [] -> []
@@ -40,10 +39,6 @@ let rec func x lst c =
   | hd :: tl -> if hd = x then c else func x tl (c + 1)
 
 let find_list_index x lst = func x lst 0
-(* let rec print_list = function | [] -> () | e :: l -> print_int e;
-   print_string " "; print_list l *)
-
-(****** HELPERS END ******)
 
 type game_mode =
   | Toxic
@@ -57,8 +52,6 @@ type game_data = {
   players : Player.t array;
   scores : int list;
 }
-
-(* type running_game = game_data ref *)
 
 let game =
   ref
@@ -80,8 +73,8 @@ let string_of_game () =
       ^ (match g_mode with
         | Wholesome -> "Wholesome"
         | Toxic -> "Toxic")
-      ^ ", " ^ string_of_int num_rounds ^ ", " ^ string_of_int num_players
-      ^ ", "
+      ^ " | " ^ "Game Length: " ^ string_of_int num_rounds ^ " rounds | "
+      ^ string_of_int num_players ^ " players with the players being "
       ^ (get_player_names (Array.to_list players) |> names_separated)
       ^ "}"
 
@@ -101,15 +94,12 @@ let initialize_game g_mode num_p ruds name_array =
     {
       g_mode;
       game_file = find_game_file g_mode;
-      num_rounds = ruds;
       num_players = num_p;
+      num_rounds = ruds;
       players = name_array;
       scores = make_0_list num_p [];
     };
-  print_endline (string_of_game ())
-
-(* Array.make num_p 0 |> Array.to_list turns an array into a list while
-   initializing*)
+  print_endline ("Your game settings are: " ^ string_of_game ())
 
 let rec listadd a b =
   match a with
@@ -125,11 +115,6 @@ let update_player_scores game_data new_scores =
   let n_game = { !game_data with scores = added_list } in
   game := n_game
 
-(* let update_player_score_extra game_data new_scores = let deref_game_data =
-   !game_data in let n_game = { g_mode = deref_game_data.g_mode; num_rounds =
-   deref_game_data.num_rounds; num_players = deref_game_data.num_players;
-   players = deref_game_data.players; scores = new_scores; } in game_data :=
-   n_game *)
 let update_rounds game_data num_rounds =
   let n_game = { !game_data with num_rounds } in
   game := n_game
@@ -138,9 +123,6 @@ let update_game_mode game_data g_mode =
   let game_file = find_game_file g_mode in
   let n_game = { !game_data with g_mode; game_file } in
   game := n_game
-
-(* let update_game_file game_data g_mode = let game_file = find_game_file g_mode
-   in let n_game = { !game_data with game_file } in game := n_game *)
 
 let wrap_up_game game_data =
   let deref_game_data = !game_data in
@@ -198,14 +180,28 @@ let get_winner game_data =
                           (max_number_list !game_data.scores)
                           !game_data.scores)
 
+let combine_rank_name rankings names = List.combine rankings names
+
+let tuple_list_to_list tuple =
+  let new_array = Array.make (List.length tuple) "" in
+  for i = 0 to List.length tuple - 1 do
+    Array.set new_array i (fst (List.nth tuple i) ^ snd (List.nth tuple i))
+  done;
+  new_array
+
 let get_rankings game_data =
   let score_player_tuple = get_winner_helper game_data in
   let ordered_name_array = Array.make (List.length score_player_tuple) "" in
+  let ordered_ranking_array = Array.make (List.length score_player_tuple) "" in
   for i = 0 to List.length score_player_tuple - 1 do
     Array.set ordered_name_array i
-      (Player.get_player_name (Stdlib.snd (List.nth score_player_tuple i)))
+      (Player.get_player_name (Stdlib.snd (List.nth score_player_tuple i)));
+    Array.set ordered_ranking_array i ("  #" ^ string_of_int (i + 1) ^ ": ")
   done;
-  ordered_name_array |> Array.to_list |> join_strings
+  combine_rank_name
+    (Array.to_list ordered_ranking_array)
+    (Array.to_list ordered_name_array)
+  |> tuple_list_to_list |> Array.to_list |> join_strings
 
 let get_cumulative_player_score game_state =
   let deref_game_data = !game_state in
@@ -216,3 +212,25 @@ let get_cumulative_player_score game_state =
       (Player.get_player_score deref_game_data.players.(i))
   done;
   cumulative_score_array |> Array.to_list
+
+let get_winner_helper_overall game_data =
+  let deref_game_data = !game_data in
+  let score_player_tuple =
+    combine_rank_name
+      (get_cumulative_player_score game_data)
+      (deref_game_data.players |> Array.to_list)
+  in
+  tuple_sort score_player_tuple
+
+let get_cumulative_rankings game_data =
+  let score_player_tuple = get_winner_helper_overall game_data in
+  let ordered_name_array = Array.make (List.length score_player_tuple) "" in
+  let ordered_ranking_array = Array.make (List.length score_player_tuple) "" in
+  for i = 0 to List.length score_player_tuple - 1 do
+    Array.set ordered_name_array i
+      (Player.get_player_name (Stdlib.snd (List.nth score_player_tuple i)));
+    Array.set ordered_ranking_array i ("  #" ^ string_of_int (i + 1) ^ ": ")
+  done;
+  combine_rank_name
+    (Array.to_list ordered_ranking_array)
+    (Array.to_list ordered_name_array)

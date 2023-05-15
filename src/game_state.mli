@@ -1,6 +1,13 @@
+(** Representation of dynamic game state.
+
+    This module represents the tracker of in-game variables at any given time
+    during the game. This includes the game mode, grading mode, number of
+    rounds, number of players, the players themselves, their respective scores,
+    and functions to access and modify/update all of these in-game variables. *)
+
 type game_mode =
   | Toxic
-  | Wholesome  (** The type representing the the different game modes. *)
+  | Wholesome  (** The type representing the different game modes. *)
 
 type game_data = {
   g_mode : game_mode;
@@ -10,13 +17,13 @@ type game_data = {
   players : Player.t array;
   scores : int list;
 }
-(** The abstract data type representing the the game and its state. It includes
-    the game mode, score mode, number of players, the player themselves, scores
-    for each round for each player, current round, and whether or not the game
-    ended. The most important features of game_state is to keep track of the
-    players in the game, keep track of rounds, update the player's score based
-    on the given score calculated in get_data and interface, as well as keeping
-    track of rounds and when the game ends. *)
+(** The data type representing the the game and its state. It includes the game
+    mode, score mode, number of players, the player themselves, scores for each
+    round for each player, current round, and whether or not the game ended. The
+    most important features of game_state is to keep track of the players in the
+    game, keep track of rounds, update the player's score based on the given
+    score calculated in get_data and interface, as well as keeping track of
+    rounds and when the game ends. *)
 
 val game : game_data ref
 (** game is a ref that represents the starting game_data *)
@@ -51,7 +58,7 @@ val get_did_game_end : game_data ref -> int -> bool
 (** [did_game_end game_data rnd_num] game is whether or not the game finished. *)
 
 val get_current_scores : game_data ref -> int list
-(** [get_score_total_list game_data] turns the array of total scores into a list
+(** [get_current_scores game_data] turns the array of total scores into a list
     of total scores. *)
 
 val get_game_mode : game_data ref -> game_mode
@@ -81,3 +88,9 @@ val get_rankings : game_data ref -> string
 val get_cumulative_player_score : game_data ref -> int list
 (** [get_cumulative_player_score game_data] returns the list of all players's
     scores *)
+
+val get_cumulative_rankings : game_data ref -> (string * string) list
+(** [get_cumulative_rankings game_data] returns the ranking of the players in
+    descending order by their points in a rank player tuple. For example, if
+    Liam has 100 points, and Charlie has 50, then Liam is ranked before Charlie
+    because 100>50 *)
