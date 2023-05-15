@@ -55,7 +55,8 @@ val create_num_rounds : string -> int
     after an invalid one. Continues to request input until one is valid.*)
 
 val ask_instructions : string -> bool
-(** [ask_instructions x] is true if [x] is 'Yes' or false if [x] is 'No' *)
+(** [ask_instructions x] asks the user whether or not they would like to view
+    the instructions. Returns true if [x] is 'yes' or false if [x] is 'no' *)
 
 val get_player : int -> Player.t array -> Player.t
 (** [get_player n arr] is the player at index [n] in [arr] *)
@@ -89,3 +90,7 @@ val display_scoreboard : Game_state.game_data ref -> unit
 val display_overall_scoreboard : Game_state.game_data ref -> unit
 (** [display_overall_scoreboard game] displays a formatted scoreboard of each
     player's scores in the game cumulative [game] *)
+
+val ask_credits : string -> bool
+(** [ask_credits x] asks the user whether or not they would like to view the
+    credits. Returns true if [x] is 'yes' or false if [x] is 'no' *)

@@ -214,3 +214,14 @@ let display_overall_scoreboard game =
       ^ " points")
   done;
   output_statement "\n"
+
+let rec ask_credits player_input =
+  let lowercased_input = String.lowercase_ascii player_input in
+  if lowercased_input <> "yes" && lowercased_input <> "no" then
+    ask_credits (invalid_input "input (yes or no)")
+  else
+    try
+      if lowercased_input = "yes" then true
+      else if lowercased_input = "no" then false
+      else ask_credits player_input
+    with _ -> ask_credits (invalid_input "input (yes or no)")
