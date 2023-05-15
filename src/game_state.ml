@@ -1,4 +1,4 @@
-exception Failure of string
+open Stdlib
 
 (****** HELPERS START ******)
 let rec get_player_names lst =
@@ -130,11 +130,46 @@ let get_num_rounds game_data = !game_data.num_rounds
 let get_num_players game_data = !game_data.num_players
 let get_players game_data = !game_data.players
 
+let invert_list lst =
+  let rec aux acc = function
+    | [] -> acc
+    | h :: t -> aux (h :: acc) t
+  in
+  aux [] lst
+
+let tuple_sort lst =
+  List.sort
+    (fun (k1, v1) (k2, v2) -> if k1 = k2 then compare v1 v2 else compare k1 k2)
+    lst
+  |> invert_list
+
+let get_winner_helper game_data =
+  let deref_game_data = !game_data in
+  let score_player_tuple =
+    List.combine deref_game_data.scores
+      (deref_game_data.players |> Array.to_list)
+  in
+  tuple_sort score_player_tuple
+
+let rec join_strings = function
+  | [] -> ""
+  | "" :: t -> join_strings t
+  | h :: t -> h ^ " " ^ join_strings t
+
 let get_winner game_data =
   Player.get_player_name
     !game_data.players.(find_list_index
                           (max_number_list !game_data.scores)
                           !game_data.scores)
+
+let get_rankings game_data =
+  let score_player_tuple = get_winner_helper game_data in
+  let ordered_name_array = Array.make (List.length score_player_tuple) "" in
+  for i = 0 to List.length score_player_tuple - 1 do
+    Array.set ordered_name_array i
+      (Player.get_player_name (Stdlib.snd (List.nth score_player_tuple i)))
+  done;
+  ordered_name_array |> Array.to_list |> join_strings
 
 let get_cumulative_player_score game_state =
   let deref_game_data = !game_state in

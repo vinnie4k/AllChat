@@ -65,6 +65,11 @@ val get_players : game_data ref -> Player.t array
 val get_winner : game_data ref -> string
 (** [get_winner game_data] returns the winner of the game by their score *)
 
+val get_rankings : game_data ref -> string
+(** [get_rankings game_data] returns the ranking of the players in descending
+    order by their points. For example, if Liam has 100 points, and Charlie has
+    50, then Liam is ranked before Charlie because 100>50 *)
+
 val get_cumulative_player_score : game_data ref -> int list
-(** [get_cumulative_player_score game_data] returns the winner of the game by
-    their score *)
+(** [get_cumulative_player_score game_data] returns the list of all players's
+    scores *)

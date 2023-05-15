@@ -47,6 +47,10 @@ let rec create_game_mode player_input =
   | "toxic" -> Game_state.Toxic
   | _ -> create_game_mode (invalid_input "game mode")
 
+let rec create_num_players player_input =
+  try int_of_string player_input
+  with _ -> create_num_players (invalid_input "number")
+
 let format_word_bank bank =
   let strin = List.fold_left (fun acc word -> word ^ " | " ^ acc) "" bank in
   String.sub strin 0 (String.length strin - 3)
@@ -57,12 +61,27 @@ let words_to_list x = Str.split_delim (Str.regexp " ") x
 (* let rec word_in_list input bank = match input with | h :: t -> List.exists
    (fun wrd -> wrd = h) bank || word_in_list t bank | [] -> false *)
 
+let rec check_valid_input repo = function
+  | h :: t -> Get_data.includes_word repo h && check_valid_input repo t
+  | [] -> true
+
+let rec continue_to_ask repo words_strg =
+  let wrd_lst = words_to_list words_strg in
+
+  if check_valid_input repo wrd_lst then
+    match wrd_lst with
+    | h :: _ -> h
+    | _ ->
+        continue_to_ask repo (String.lowercase_ascii (invalid_input "response"))
+  else continue_to_ask repo (String.lowercase_ascii (invalid_input "response"))
+
 let rec run_round pn data wpr p_array round_sentence rnd_num player_num
     response_list =
   if pn = player_num then
     Get_data.calculate_score data round_sentence response_list
   else
-    let formatted_word_bank = format_word_bank (Get_data.get_word data wpr) in
+    let bank_list = Get_data.get_word data wpr in
+    let formatted_word_bank = format_word_bank bank_list in
     output_statement
       ("\n" ^ Player.get_player_name (get_player pn p_array) ^ "'s turn:");
     output_statement ("\"" ^ round_sentence ^ "\"");
@@ -75,16 +94,28 @@ let rec run_round pn data wpr p_array round_sentence rnd_num player_num
          (* "(type your words in the order they should appear in the sentence, \
             separating the words with spaces)"); *)
          "(type a single word with no spaces)");
-    let response = output_question "" in
-    run_round (pn + 1) data wpr p_array round_sentence rnd_num player_num
-      (response_list @ [ response ])
+    let response = String.lowercase_ascii (output_question "") in
+    let res_wrd_list = words_to_list response in
+    if check_valid_input data res_wrd_list then
+      match res_wrd_list with
+      | response1 :: _ ->
+          run_round (pn + 1) data wpr p_array round_sentence rnd_num player_num
+            (response_list @ [ response1 ])
+      | _ ->
+          let new_response_head = continue_to_ask data response in
+          run_round (pn + 1) data wpr p_array round_sentence rnd_num player_num
+            (response_list @ [ new_response_head ])
+    else
+      let new_response_head = continue_to_ask data response in
+      run_round (pn + 1) data wpr p_array round_sentence rnd_num player_num
+        (response_list @ [ new_response_head ])
 
 (* let rec process_response game wrd_strng wrd_lst blanks sent_strng = let
    input_words = words_to_list wrd_strng in if not (List.length input_words =
    blanks) then process_response game (invalid_input "word") wrd_lst blanks
    sent_strng else match word_in_list input_words wrd_lst with | false ->
    process_response game (invalid_input "word") wrd_lst blanks sent_strng | true
-   -> (*Get_data.calculate_score file*) 1::2::[] *)
+   -> (*Get_data.calculate_score file*) [ 1; 2 ] *)
 
 (* let make_score_pairs s_list p_array = if not (List.length s_list =
    Array.length p_array) then raise "players dont all have a score" else let
@@ -114,6 +145,13 @@ let display_scoreboard game =
       match output_question "Type anything to continue" with
       | _ -> ())
   | _ -> ()
+
+(* let display_end_game_scoreboard game rankings = let scores_list =
+   Game_state.get_cumulative_player_score game in output_statement "\nCumulative
+   Leaderboard for all games:"; for p = 0 to Game_state.get_num_players game - 1
+   do output_statement ("Player " ^ string_of_int (p + 1) ^ ": " ^ rankings.(p)
+   ^ " - " ^ string_of_int (List.nth scores_list p) ^ " points") done;
+   output_statement "\n" *)
 
 let display_overall_scoreboard game =
   let scores_list = Game_state.get_cumulative_player_score game in

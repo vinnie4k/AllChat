@@ -33,8 +33,13 @@ val invalid_input : string -> string
     regarding [x] *)
 
 val create_game_mode : string -> Game_state.game_mode
-(** [create_game_mode x] is Some Game_state.game_mode if [x] is a valid game
-    mode or None if not *)
+(** [create_game_mode x] is a Game_state.game_mode created from the player's new
+    response [x] after an invalid one. Continues to request input until one is
+    valid. *)
+
+val create_num_players : string -> int
+(** [create_num_players x] is an int created from the player's new response [x]
+    after an invalid one. Continues to request input until one is valid.*)
 
 val get_player : int -> Player.t array -> Player.t
 (** [get_player n arr] is the player at index [n] in [arr] *)
