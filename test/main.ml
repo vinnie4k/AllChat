@@ -49,6 +49,7 @@ let get_word_test (name : string) (word_repo : Get_data.t) (num_word : int)
   name >:: fun _ ->
   assert_equal expected_output
     (check_mems (Get_data.get_word word_repo num_word) expected_list)
+    ~printer:string_of_bool
 
 let get_word_fail_test (name : string) (word_repo : Get_data.t) (num_word : int)
     (expected_output : exn) : test =
@@ -60,6 +61,7 @@ let get_sentence_test (name : string) (word_repo : Get_data.t)
   name >:: fun _ ->
   assert_equal expected_output
     (Get_data.includes_sentence word_repo (Get_data.get_sentence word_repo))
+    ~printer:string_of_bool
 
 let get_sentence_fail_test (name : string) (word_repo : Get_data.t)
     (expected_output : exn) : test =
@@ -69,7 +71,9 @@ let get_sentence_fail_test (name : string) (word_repo : Get_data.t)
 let get_blanks_test (name : string) (word_repo : Get_data.t) (sentence : string)
     (expected_output : int) : test =
   name >:: fun _ ->
-  assert_equal expected_output (Get_data.get_blanks word_repo sentence)
+  assert_equal expected_output
+    (Get_data.get_blanks word_repo sentence)
+    ~printer:string_of_int
 
 let get_blanks_fail_test (name : string) (word_repo : Get_data.t)
     (sentence : string) (expected_output : exn) : test =
@@ -109,12 +113,16 @@ let calculate_score_fail_test (name : string) (word_repo : Get_data.t)
 let includes_sentence_test (name : string) (word_repo : Get_data.t)
     (sentence : string) (expected_output : bool) : test =
   name >:: fun _ ->
-  assert_equal expected_output (Get_data.includes_sentence word_repo sentence)
+  assert_equal expected_output
+    (Get_data.includes_sentence word_repo sentence)
+    ~printer:string_of_bool
 
 let includes_word_test (name : string) (word_repo : Get_data.t) (word : string)
     (expected_output : bool) : test =
   name >:: fun _ ->
-  assert_equal expected_output (Get_data.includes_word word_repo word)
+  assert_equal expected_output
+    (Get_data.includes_word word_repo word)
+    ~printer:string_of_bool
 
 let algorithm_test =
   [
@@ -666,24 +674,36 @@ let interface_test =
 
 (*game state test suite*)
 let new_player1_game_state = Player.new_player "player1"
-let new_player2_game_state = Player.new_player "player2"
-
-let () =
-  Game_state.initialize_game Game_state.Toxic 2
-    [| new_player1_game_state; new_player2_game_state |]
+(* let new_player2_game_state = Player.new_player "player2" let
+   new_player3_game_state = Player.new_player "player3" let
+   new_player4_game_state = Player.new_player "player4" *)
 
 let get_gf_helper file_name =
   "data/" ^ file_name |> Yojson.Basic.from_file |> Get_data.from_json
 
+(*Skeletons for initializing a game*)
+let initialize_game_test (name : string) (game_mode : Game_state.game_mode)
+    (player_num : int) (player_array : Player.t array) (expected_output : bool)
+    : test =
+  name >:: fun _ ->
+  let () = Game_state.initialize_game game_mode player_num 1 player_array in
+  assert_equal expected_output
+    (Game_state.get_did_game_end Game_state.game 0)
+    ~printer:string_of_bool
+
+(*Skeletons for get functions in game state*)
 let get_did_game_end_test (name : string) (current_round : int)
     (expected_output : bool) : test =
   name >:: fun _ ->
   assert_equal expected_output
     (Game_state.get_did_game_end Game_state.game current_round)
+    ~printer:string_of_bool
 
 let get_current_score_test (name : string) (expected_output : int list) : test =
   name >:: fun _ ->
-  assert_equal expected_output (Game_state.get_current_scores Game_state.game)
+  assert_equal expected_output
+    (Game_state.get_current_scores Game_state.game)
+    ~printer:(List.fold_left (fun acc x -> acc ^ string_of_int x ^ " ") "")
 
 let get_game_mode_test (name : string) (expected_output : Game_state.game_mode)
     : test =
@@ -715,7 +735,7 @@ let get_winner_test (name : string) (expected_output : string) : test =
   assert_equal expected_output (Game_state.get_winner Game_state.game)
     ~printer:(fun x -> x)
 
-let get_rankings_tests (name : string) (expected_output : string) : test =
+let get_rankings_test (name : string) (expected_output : string) : test =
   name >:: fun _ ->
   assert_equal expected_output (Game_state.get_rankings Game_state.game)
     ~printer:(fun x -> x)
@@ -727,28 +747,105 @@ let get_cumulative_player_score (name : string) (expected_output : int list) :
     (Game_state.get_cumulative_player_score Game_state.game)
     ~printer:(List.fold_left (fun acc x -> acc ^ string_of_int x ^ " ") "")
 
-let game_state_tests =
+(*Skeletons for modifying functions in game state*)
+let update_player_score_test (name : string) (scores : int list)
+    (expected_output : int list) : test =
+  name >:: fun _ ->
+  let () = Game_state.update_player_scores Game_state.game scores in
+  assert_equal expected_output
+    (Game_state.get_current_scores Game_state.game)
+    ~printer:(List.fold_left (fun acc x -> acc ^ string_of_int x ^ " ") "")
+
+let update_game_mode_variant_test (name : string)
+    (new_game_mode : Game_state.game_mode)
+    (expected_output : Game_state.game_mode) : test =
+  name >:: fun _ ->
+  let () = Game_state.update_game_mode Game_state.game new_game_mode in
+  assert_equal expected_output (Game_state.get_game_mode Game_state.game)
+
+let update_game_mode_file_test (name : string)
+    (new_game_mode : Game_state.game_mode) (expected_output : Get_data.t) : test
+    =
+  name >:: fun _ ->
+  let () = Game_state.update_game_mode Game_state.game new_game_mode in
+  assert_equal expected_output (Game_state.get_gf Game_state.game)
+
+let wrap_up_game_test (name : string) (expected_output : int list) : test =
+  name >:: fun _ ->
+  let () = Game_state.wrap_up_game Game_state.game in
+  assert_equal expected_output
+    (Game_state.get_current_scores Game_state.game)
+    ~printer:(List.fold_left (fun acc x -> acc ^ string_of_int x ^ " ") "")
+
+let () =
+  Game_state.initialize_game Game_state.Toxic 1 3 [| new_player1_game_state |]
+
+let game_state_tests_one_player =
   [
-    (* Tests for correct initialization*)
+    (* Tests for correct initialization for 1 player*)
+    initialize_game_test "initializing a game for one player" Game_state.Toxic 1
+      [| new_player1_game_state |]
+      false;
     get_did_game_end_test "game did not end for initial game" 0 false;
-    get_current_score_test "score of new game should be 0s" [ 0; 0 ];
+    get_current_score_test "score of new game should be 0s" [ 0 ];
     get_game_mode_test "score mode of new game should be toxic" Game_state.Toxic;
     get_gf_test "game file for initial game test"
       (get_gf_helper "toxic_data.json");
     get_num_rounds_test "new game round should be 3" 3;
-    get_num_players_test "new game round should be 2" 2;
-    get_players_test "new game list of players should be liam and vin"
-      [| new_player1_game_state; new_player2_game_state |];
-    get_winner_test "new game winner should be vin" "player1";
-    get_rankings_tests "new game ranking should be vin then liam"
-      "player2 player1 ";
-    get_cumulative_player_score "cumulative for initial game should be 0s"
-      [ 0; 0 ];
+    get_num_players_test "new game round for one player should be 1" 1;
+    get_players_test "new game list of players should be player1"
+      [| new_player1_game_state |];
+    get_winner_test "new game winner should be player1" "player1";
+    get_rankings_test "new game ranking should be player1" "player1 ";
+    get_cumulative_player_score "cumulative for initial game should be 0" [ 0 ];
+    (* Tests for modifier functions for initialized game*)
+    update_player_score_test "update scores with 50 and 100" [ 50 ] [ 50 ];
+    update_game_mode_variant_test "update game mode to wholesome 1"
+      Game_state.Wholesome Game_state.Wholesome;
+    update_game_mode_file_test "update game mode to wholesome 2"
+      Game_state.Wholesome
+      (get_gf_helper "wholesome_data.json");
+    wrap_up_game_test "wrap up game test, should reset scores to 0" [ 0 ];
   ]
+
+(* let () = Game_state.initialize_game Game_state.Toxic 3 [|
+   new_player2_game_state; new_player2_game_state |] let
+   game_state_tests_three_players = [ (* Tests for correct initialization for 3
+   player*) initialize_game_test "3 PLAYERS initializing a game for 3 players"
+   Game_state.Toxic 3 [| new_player2_game_state; new_player3_game_state;
+   new_player4_game_state; |] false; get_did_game_end_test "3 PLAYERS game did
+   not end for initial game" 0 false; get_current_score_test "3 PLAYERS score of
+   new game should be 0s" [ 0; 0; 0 ]; get_game_mode_test "3 PLAYERS score mode
+   of new game should be toxic" Game_state.Toxic; get_gf_test "3 PLAYERS game
+   file for initial game test" (get_gf_helper "toxic_data.json");
+   get_num_rounds_test "3 PLAYERS new game round should be 3" 3;
+   get_num_players_test "3 PLAYERS new game round should be 3" 3;
+   get_players_test "3 PLAYERS new game list of players should be player2,
+   player3, and \ player4" [| new_player2_game_state; new_player3_game_state;
+   new_player4_game_state; |]; get_winner_test "3 PLAYERS new game winner should
+   be player2" "player2"; get_rankings_test "3 PLAYERS new game ranking should
+   be player4, player3, player2" "player4 player3 player2 ";
+   get_cumulative_player_score "3 PLAYERS cumulative for initial game should be
+   0s" [ 0; 0; 0 ]; (* Tests for modifier functions for initialized game*)
+   update_player_score_test "UPDATED 3 PLAYERS update scores with 50 and 100 and
+   0" [ 50; 100; 0 ] [ 50; 100; 0 ]; get_winner_test "UPDATED 3 PLAYERS new game
+   winner should be player3" "player3"; get_rankings_test "UPDATED 3 PLAYERS new
+   game ranking should be player3, player2, player4" "player3 player2 player4 ";
+   update_game_mode_variant_test "UPDATED 3 PLAYERS update game mode to
+   wholesome 1" Game_state.Wholesome Game_state.Wholesome;
+   update_game_mode_file_test "update game mode to wholesome 2"
+   Game_state.Wholesome (get_gf_helper "wholesome_data.json"); wrap_up_game_test
+   "UPDATED 3 PLAYERS wrap up game test, should reset scores to 0" [ 0; 0; 0 ];
+   ] *)
 
 let suite =
   "test suite for Allchat"
   >::: List.flatten
-         [ algorithm_test; player_test; interface_test; game_state_tests ]
+         [
+           algorithm_test;
+           player_test;
+           interface_test;
+           game_state_tests_one_player;
+         ]
 
 let _ = run_test_tt_main suite

@@ -29,12 +29,17 @@ let rec consecutive_games game_data =
     Interface.create_game_mode
       (Interface.output_question "Enter the game mode (Toxic or Wholesome): ")
   in
+  let num_rounds =
+    Interface.create_num_rounds
+      (Interface.output_question "How many rounds do you want to play?")
+  in
   Interface.output_statement
     ("Welcome back to the game! "
     ^ (Interface.fetch_player_names
          (Array.to_list (Game_state.get_players game_data))
       |> Interface.names_separated)
     ^ "!");
+  Game_state.update_rounds game_data num_rounds;
   Game_state.update_game_mode game_data game_mode;
   (*playing rounds*)
   for rnd = 1 to Game_state.get_num_rounds Game_state.game do
@@ -48,6 +53,11 @@ let rec consecutive_games game_data =
     ("\nThe winner of this game is "
     ^ Game_state.get_winner Game_state.game
     ^ "!");
+  Interface.output_statement
+    ("\nThe ranking for this game is "
+    ^ Game_state.get_winner Game_state.game
+    ^ "!" ^ "\nHere are the rankings in order:\n"
+    ^ Game_state.get_rankings Game_state.game);
   Game_state.wrap_up_game Game_state.game;
   Interface.display_overall_scoreboard Game_state.game;
   let output =
@@ -71,6 +81,10 @@ let start_game f =
     Interface.create_num_players
       (Interface.output_question "How many people are playing?")
   in
+  let num_rounds =
+    Interface.create_num_rounds
+      (Interface.output_question "How many rounds do you want to play?")
+  in
   let player_list = Array.make num_players (Player.new_player "|*_*|") in
   for i = 0 to num_players - 1 do
     player_list.(i) <- Interface.create_player (i + 1)
@@ -80,7 +94,7 @@ let start_game f =
     ^ (Interface.fetch_player_names (Array.to_list player_list)
       |> Interface.names_separated)
     ^ "!");
-  Game_state.initialize_game game_mode num_players player_list;
+  Game_state.initialize_game game_mode num_rounds num_players player_list;
   Interface.output_statement
     ("\nHey, "
     ^ (Interface.fetch_player_names (Array.to_list player_list)
@@ -104,6 +118,10 @@ let start_game f =
     Interface.output_statement ("\nRound " ^ string_of_int rnd ^ " complete!");
     Interface.display_scoreboard Game_state.game
   done;
+  Interface.output_statement
+    ("\nThe winner of this game is "
+    ^ Game_state.get_winner Game_state.game
+    ^ "!");
   Interface.output_statement
     ("\nThe ranking for this game is "
     ^ Game_state.get_winner Game_state.game

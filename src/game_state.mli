@@ -24,9 +24,13 @@ val game : game_data ref
 val string_of_game : unit -> string
 (** [string_of_game] converts game to a string representation *)
 
-val initialize_game : game_mode -> int -> Player.t array -> unit
+val initialize_game : game_mode -> int -> int -> Player.t array -> unit
 (** [initialize_game g_mode n lst] initializes initial_game with [n] number of
     players, each with name in [lst], with the game mode [g_mode] *)
+
+val update_rounds : game_data ref -> int -> unit
+(** [update_rounds game_data num_rounds] updates the game data with new round
+    number. *)
 
 val update_player_scores : game_data ref -> int list -> unit
 (** [update_player_scores game_data player_score_lst] updates the game data with
@@ -34,7 +38,7 @@ val update_player_scores : game_data ref -> int list -> unit
 
 val update_game_mode : game_data ref -> game_mode -> unit
 (** [update_game_mode game_mode g_mode] updates the game with the game mode
-    [g_mode] *)
+    [g_mode] as well as the corresponding file type *)
 
 val wrap_up_game : game_data ref -> unit
 (** [wrap_up_game game_data] updates the game data once it ends. It inputs the

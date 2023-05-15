@@ -70,6 +70,13 @@ let rec create_num_players player_input =
     else np
   with _ -> create_num_players (invalid_input "number")
 
+let rec create_num_rounds player_input =
+  try
+    let np = int_of_string player_input in
+    if np <= 0 then create_num_rounds (invalid_input "number of friends")
+    else np
+  with _ -> create_num_rounds (invalid_input "number")
+
 let format_word_bank bank =
   let strin = List.fold_left (fun acc word -> word ^ " | " ^ acc) "" bank in
   String.sub strin 0 (String.length strin - 3)

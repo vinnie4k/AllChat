@@ -96,12 +96,12 @@ let find_game_file g_mode =
   | Toxic -> get_gf_helper "toxic_data.json"
   | Wholesome -> get_gf_helper "wholesome_data.json"
 
-let initialize_game g_mode num_p name_array =
+let initialize_game g_mode num_p ruds name_array =
   game :=
     {
       g_mode;
       game_file = find_game_file g_mode;
-      num_rounds = 3;
+      num_rounds = ruds;
       num_players = num_p;
       players = name_array;
       scores = make_0_list num_p [];
@@ -130,6 +130,9 @@ let update_player_scores game_data new_scores =
    deref_game_data.num_rounds; num_players = deref_game_data.num_players;
    players = deref_game_data.players; scores = new_scores; } in game_data :=
    n_game *)
+let update_rounds game_data num_rounds =
+  let n_game = { !game_data with num_rounds } in
+  game := n_game
 
 let update_game_mode game_data g_mode =
   let game_file = find_game_file g_mode in
@@ -146,7 +149,12 @@ let wrap_up_game game_data =
       deref_game_data.players.(i)
       (List.nth deref_game_data.scores i)
   done;
-  let n_game = { deref_game_data with scores = [ 0; 0; 0 ] } in
+  let n_game =
+    {
+      deref_game_data with
+      scores = List.map (fun _ -> 0) deref_game_data.scores;
+    }
+  in
   game := n_game
 
 (*Getters*)
