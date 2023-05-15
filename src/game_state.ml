@@ -101,8 +101,8 @@ let initialize_game g_mode num_p ruds name_array =
     {
       g_mode;
       game_file = find_game_file g_mode;
-      num_rounds = ruds;
       num_players = num_p;
+      num_rounds = ruds;
       players = name_array;
       scores = make_0_list num_p [];
     };
