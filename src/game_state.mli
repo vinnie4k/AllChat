@@ -4,6 +4,7 @@ type game_mode =
 
 type game_data = {
   g_mode : game_mode;
+  game_file : Get_data.t;
   num_rounds : int;
   num_players : int;
   players : Player.t array;
@@ -51,6 +52,9 @@ val get_current_scores : game_data ref -> int list
 
 val get_game_mode : game_data ref -> game_mode
 (** [get_game_mode game_data] returns the current game_mode of the game. *)
+
+val get_gf : game_data ref -> Get_data.t
+(** [get_gf game_data] returns the current game file of the game. *)
 
 val get_num_rounds : game_data ref -> int
 (** [get_num_rounds game_data] returns the total length of the game in rounds. *)

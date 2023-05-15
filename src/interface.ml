@@ -40,15 +40,31 @@ let invalid_input ans =
   in
   outpt
 
+let create_custom_game player_input =
+  let s = player_input |> String.trim |> String.lowercase_ascii in
+  match s with
+  | "y" -> true
+  | "yes" -> true
+  | "yas" -> true
+  | "yep" -> true
+  | "custom" -> true
+  | _ -> false
+
 let rec create_game_mode player_input =
   let s = player_input |> String.trim |> String.lowercase_ascii in
   match s with
   | "wholesome" -> Game_state.Wholesome
+  | "w" -> Game_state.Wholesome
   | "toxic" -> Game_state.Toxic
+  | "t" -> Game_state.Toxic
+  | "shut the fuck up" -> Game_state.Toxic
   | _ -> create_game_mode (invalid_input "game mode")
 
 let rec create_num_players player_input =
-  try int_of_string player_input
+  try
+    let np = int_of_string player_input in
+    if np <= 0 then create_num_players (invalid_input "number of friends")
+    else np
   with _ -> create_num_players (invalid_input "number")
 
 let format_word_bank bank =
@@ -57,23 +73,30 @@ let format_word_bank bank =
 
 let get_player n arr = arr.(n)
 let words_to_list x = Str.split_delim (Str.regexp " ") x
+let word_in_list word bank = List.exists (fun wrd -> wrd = word) bank
 
-(* let rec word_in_list input bank = match input with | h :: t -> List.exists
-   (fun wrd -> wrd = h) bank || word_in_list t bank | [] -> false *)
-
-let rec check_valid_input repo = function
-  | h :: t -> Get_data.includes_word repo h && check_valid_input repo t
+let rec check_valid_input repo input bank =
+  match input with
+  | h :: t ->
+      Get_data.includes_word repo h
+      && word_in_list h bank
+      && check_valid_input repo t bank
   | [] -> true
 
-let rec continue_to_ask repo words_strg =
+let rec continue_to_ask repo words_strg bank =
   let wrd_lst = words_to_list words_strg in
 
-  if check_valid_input repo wrd_lst then
+  if check_valid_input repo wrd_lst bank then
     match wrd_lst with
     | h :: _ -> h
     | _ ->
-        continue_to_ask repo (String.lowercase_ascii (invalid_input "response"))
-  else continue_to_ask repo (String.lowercase_ascii (invalid_input "response"))
+        continue_to_ask repo
+          (String.lowercase_ascii (invalid_input "response"))
+          bank
+  else
+    continue_to_ask repo
+      (String.lowercase_ascii (invalid_input "response"))
+      bank
 
 let rec run_round pn data wpr p_array round_sentence rnd_num player_num
     response_list =
@@ -96,17 +119,17 @@ let rec run_round pn data wpr p_array round_sentence rnd_num player_num
          "(type a single word with no spaces)");
     let response = String.lowercase_ascii (output_question "") in
     let res_wrd_list = words_to_list response in
-    if check_valid_input data res_wrd_list then
+    if check_valid_input data res_wrd_list bank_list then
       match res_wrd_list with
       | response1 :: _ ->
           run_round (pn + 1) data wpr p_array round_sentence rnd_num player_num
             (response_list @ [ response1 ])
       | _ ->
-          let new_response_head = continue_to_ask data response in
+          let new_response_head = continue_to_ask data response bank_list in
           run_round (pn + 1) data wpr p_array round_sentence rnd_num player_num
             (response_list @ [ new_response_head ])
     else
-      let new_response_head = continue_to_ask data response in
+      let new_response_head = continue_to_ask data response bank_list in
       run_round (pn + 1) data wpr p_array round_sentence rnd_num player_num
         (response_list @ [ new_response_head ])
 

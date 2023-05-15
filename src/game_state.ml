@@ -51,6 +51,7 @@ type game_mode =
 
 type game_data = {
   g_mode : game_mode;
+  game_file : Get_data.t;
   num_rounds : int;
   num_players : int;
   players : Player.t array;
@@ -63,6 +64,9 @@ let game =
   ref
     {
       g_mode = Wholesome;
+      game_file =
+        "data/" ^ "test_data.json" |> Yojson.Basic.from_file
+        |> Get_data.from_json;
       num_rounds = 0;
       num_players = 0;
       players = Array.make 0 (Player.new_player "");
@@ -84,10 +88,19 @@ let string_of_game () =
 let rec make_0_list len lst =
   if List.length lst = len then lst else make_0_list len (0 :: lst)
 
+let get_gf file_name =
+  "data/" ^ file_name |> Yojson.Basic.from_file |> Get_data.from_json
+
+let find_game_file g_mode =
+  match g_mode with
+  | Toxic -> get_gf "toxic_data.json"
+  | Wholesome -> get_gf "wholesome_data.json"
+
 let initialize_game g_mode num_p name_array =
   game :=
     {
       g_mode;
+      game_file = find_game_file g_mode;
       num_rounds = 3;
       num_players = num_p;
       players = name_array;
@@ -98,8 +111,18 @@ let initialize_game g_mode num_p name_array =
 (* Array.make num_p 0 |> Array.to_list turns an array into a list while
    initializing*)
 
+let rec listadd a b =
+  match a with
+  | [] -> b
+  | hd :: tl -> (
+      match b with
+      | hd2 :: tl2 -> (hd + hd2) :: listadd tl tl2
+      | [] -> a)
+
 let update_player_scores game_data new_scores =
-  let n_game = { !game_data with scores = new_scores } in
+  let deref_game_data = !game_data in
+  let added_list = listadd new_scores deref_game_data.scores in
+  let n_game = { !game_data with scores = added_list } in
   game := n_game
 
 (* let update_player_score_extra game_data new_scores = let deref_game_data =
@@ -109,8 +132,12 @@ let update_player_scores game_data new_scores =
    n_game *)
 
 let update_game_mode game_data g_mode =
-  let n_game = { !game_data with g_mode } in
+  let game_file = find_game_file g_mode in
+  let n_game = { !game_data with g_mode; game_file } in
   game := n_game
+
+(* let update_game_file game_data g_mode = let game_file = find_game_file g_mode
+   in let n_game = { !game_data with game_file } in game := n_game *)
 
 let wrap_up_game game_data =
   let deref_game_data = !game_data in
@@ -126,6 +153,7 @@ let wrap_up_game game_data =
 let get_did_game_end game_data rnd_num = !game_data.num_rounds >= rnd_num
 let get_current_scores game_data = !game_data.scores
 let get_game_mode game_data = !game_data.g_mode
+let get_gf game_data = !game_data.game_file
 let get_num_rounds game_data = !game_data.num_rounds
 let get_num_players game_data = !game_data.num_players
 let get_players game_data = !game_data.players

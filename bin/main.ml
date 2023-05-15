@@ -9,8 +9,6 @@ let gf = "data/" ^ file_name |> Yojson.Basic.from_file |> Get_data.from_json
    round *)
 let wpr = 6
 
-(* let end_game = failwith "TODO" *)
-
 let play_round data rnd_num player_num p_array =
   Interface.output_statement ("\nROUND\n   " ^ string_of_int rnd_num ^ " BEGIN!");
   let round_sentence = Get_data.get_sentence data in
@@ -63,6 +61,8 @@ let rec consecutive_games game_data =
 
 let start_game f =
   Interface.output_statement ("Loading game file " ^ f);
+  (* let custom = Interface.create_custom_game (Interface.output_question "Would
+     you like to customize your game rules?") in *)
   let game_mode =
     Interface.create_game_mode
       (Interface.output_question "Enter the game mode (Toxic or Wholesome): ")
@@ -81,9 +81,12 @@ let start_game f =
       |> Interface.names_separated)
     ^ "!");
   Game_state.initialize_game game_mode num_players player_list;
+
   (*playing rounds*)
   for rnd = 1 to Game_state.get_num_rounds Game_state.game do
-    play_round gf rnd
+    play_round
+      (Game_state.get_gf Game_state.game)
+      rnd
       (Game_state.get_num_players Game_state.game)
       (Game_state.get_players Game_state.game);
     Interface.output_statement ("\nRound " ^ string_of_int rnd ^ " complete!");
@@ -107,12 +110,14 @@ let start_game f =
 
 (** [main ()] prompts for the game to play, then starts it. *)
 let main () =
-  Interface.output_statement
-    "\nWelcome to AllChat, the game where we rate your toxicity ☠️.";
   let output =
     Interface.output_question
       "Please enter the name of the game file you want to load:"
   in
+
+  Interface.output_statement
+    "\nWelcome to AllChat, the game where we rate your toxicity ☠️.";
+
   match output with
   | exception End_of_file -> ()
   | file_name -> start_game (Interface.data_dir_prefix ^ file_name ^ ".json")

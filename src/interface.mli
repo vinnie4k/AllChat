@@ -32,6 +32,10 @@ val invalid_input : string -> string
 (** [invalid_input x] returns a string message for the previously asked question
     regarding [x] *)
 
+val create_custom_game : string -> bool
+(** [create_custom_game x] is a bool found from the player's response [x]
+    whether they wanted to input custom game rules *)
+
 val create_game_mode : string -> Game_state.game_mode
 (** [create_game_mode x] is a Game_state.game_mode created from the player's new
     response [x] after an invalid one. Continues to request input until one is
@@ -77,4 +81,4 @@ val display_scoreboard : Game_state.game_data ref -> unit
 
 val display_overall_scoreboard : Game_state.game_data ref -> unit
 (** [display_overall_scoreboard game] displays a formatted scoreboard of each
-    player's scores in the game cumulative [game]*)
+    player's scores in the game cumulative [game] *)

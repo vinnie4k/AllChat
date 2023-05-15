@@ -9,18 +9,29 @@ open Allchat
     tested is all glass box tests because the person that wrote the functions
     was the same person that tested, so they already knew what output to expect.
     This made it easy for them to locate the errors because they knew where the
-    error is, whenever a function isn't working as intended. Because the user
-    has to input certain information, we had to manually test those, so we did
-    those by playing the game ourselves and writing inputs that we think the
-    user might say and checking if the game will act how we think it would. *)
+    error is, whenever a function isn't working as intended. We also tried to
+    practice code coverage when testing the functions to further ensure that the
+    functions will work correctly. Because the user has to input certain
+    information, we had to manually test those, so we did those by playing the
+    game ourselves and writing inputs that we think the user might say and
+    checking if the game will act how we think it would. This method of testing
+    should be robust because the backend functions are tested to output
+    correctly, so when the frontend calls them they should work correctly. By
+    testing the frontend, we also ensure that the potential inputs that the user
+    gives are also tested for. Obviously we cannot predict all inputs of the
+    user, but our functions have failsafes that catch invalid inputs. *)
 
 let data_dir_prefix = "data" ^ Filename.dir_sep
 let test = Yojson.Basic.from_file (data_dir_prefix ^ "test_data.json")
 let small = Yojson.Basic.from_file (data_dir_prefix ^ "small_data.json")
 let empty = Yojson.Basic.from_file (data_dir_prefix ^ "empty_data.json")
+let toxic = Yojson.Basic.from_file (data_dir_prefix ^ "toxic_data.json")
+let wholesome = Yojson.Basic.from_file (data_dir_prefix ^ "wholesome_data.json")
 let test_json = Get_data.from_json test
 let small_json = Get_data.from_json small
 let empty_json = Get_data.from_json empty
+let toxic_json = Get_data.from_json toxic
+let wholesome_json = Get_data.from_json wholesome
 
 let int_list_to_string lst =
   List.fold_left (fun acc x -> acc ^ string_of_int x) "" lst
@@ -124,11 +135,12 @@ let algorithm_test =
       "get an exception because data size isn't large enough from test_data"
       test_json 300 Get_data.OutOfWords;
     get_word_fail_test
-      "get an exception because data size isn't large enough from test_data"
-      test_json 200 Get_data.OutOfWords;
+      "get an exception because data size isn't large enough from toxic_data"
+      toxic_json 200 Get_data.OutOfWords;
     get_word_fail_test
-      "get an exception because data size isn't large enough from test_data"
-      test_json 500 Get_data.OutOfWords;
+      "get an exception because data size isn't large enough from \
+       wholesome_data"
+      wholesome_json 500 Get_data.OutOfWords;
     get_word_fail_test "get an exception because no data exist in empty_data"
       empty_json 1 Get_data.OutOfWords;
     get_sentence_test "get a sentence from small_data" small_json true;
@@ -282,6 +294,26 @@ let algorithm_test =
       test_json "The librarian ___ the books."
       [ "careless"; "impatient"; "imitate"; "imitate"; "fool"; "running" ]
       "5050757550100";
+    calculate_score_test
+      "gets the scores for Cornell is the ___ university. with [sing, \
+       impatient] in toxic_data."
+      toxic_json "Cornell is the ___ university." [ "sing"; "impatient" ] "5075";
+    calculate_score_test
+      "gets the scores for CS4820 is the most ___ course. with [careless, \
+       impatient] in toxic_data."
+      toxic_json "CS4820 is the most ___ course."
+      [ "careless"; "impatient" ]
+      "100100";
+    calculate_score_test
+      "gets the scores for Doctor, why does my ___ hurt? with [boyfriend] in \
+       toxic_data."
+      toxic_json "Doctor, why does my ___ hurt?" [ "boyfriend" ] "75";
+    calculate_score_test
+      "gets the scores for Bruh this bird looks ___ running like that. with \
+       [honey, brave, deceitful] in toxic_data."
+      toxic_json "Bruh this bird looks ___ running like that."
+      [ "honey"; "brave"; "deceitful" ]
+      "5075100";
     calculate_score_fail_test
       "gets the exception for How did she ___ the samurai sword? with \
        [running, braids, curious] in test_data."
@@ -365,26 +397,26 @@ let algorithm_test =
        sentence is actually in test_data but the punctuation is different."
       test_json "I hope you ___ into the wall." false;
     includes_sentence_test
-      "check if The librarian ___ the books. is a sentence in test_data."
-      test_json "The librarian ___ the books." true;
+      "check if The librarian ___ the books. is a sentence in toxic_data."
+      toxic_json "The librarian ___ the books." true;
     includes_sentence_test
-      "check if A FAKE SENTNCE!!!!!!! is a sentence in test_data." test_json
+      "check if A FAKE SENTNCE!!!!!!! is a sentence in toxic_data." toxic_json
       "A FAKE SENTNCE!!!!!!!" false;
     includes_sentence_test
-      "check if Looks like a real sentence. is a sentence in test_data."
-      test_json "Looks like a real sentence." false;
+      "check if Looks like a real sentence. is a sentence in toxic_data."
+      toxic_json "Looks like a real sentence." false;
     includes_sentence_test
-      "check if The play was so much ___ today! is a sentence in test_data."
-      test_json "The play was so much ___ today!" true;
+      "check if The play was so much ___ today! is a sentence in toxic_data."
+      toxic_json "The play was so much ___ today!" true;
     includes_sentence_test
-      "check if I hate this assignment. is a sentence in test_data." test_json
-      "I hate this assignment." false;
+      "check if I hate this assignment. is a sentence in wholesome_data."
+      wholesome_json "I hate this assignment." false;
     includes_sentence_test
-      "check if Can ___ please quiet down! is a sentence in test_data."
-      test_json "Can ___ please quiet down!" true;
+      "check if Can ___ please quiet down! is a sentence in wholesome_data."
+      wholesome_json "Can ___ please quiet down!" true;
     includes_sentence_test
-      "check if Can ___ please quiet down. is a sentence in test_data."
-      test_json "Can ___ please quiet down." false;
+      "check if Can ___ please quiet down. is a sentence in wholesome_data."
+      wholesome_json "Can ___ please quiet down." false;
     includes_word_test "check if curious is a word in test_data." test_json
       "curious" true;
     includes_word_test "check if harsh is a word in test_data." test_json
@@ -399,28 +431,28 @@ let algorithm_test =
       "playing" true;
     includes_word_test "check if interested is a word in test_data." test_json
       "interested" true;
-    includes_word_test "check if bruh is a word in test_data." test_json "bruh"
-      false;
-    includes_word_test "check if binglebell is a word in test_data." test_json
+    includes_word_test "check if bruh is a word in toxic_data." toxic_json
+      "bruh" false;
+    includes_word_test "check if binglebell is a word in toxic_data." toxic_json
       "binglebell" false;
-    includes_word_test "check if looong is a word in test_data." test_json
+    includes_word_test "check if looong is a word in toxic_data." toxic_json
       "looong" false;
-    includes_word_test "check if birthday is a word in test_data." test_json
+    includes_word_test "check if birthday is a word in toxic_data." toxic_json
       "birthday" true;
-    includes_word_test "check if braids is a word in test_data." test_json
+    includes_word_test "check if braids is a word in toxic_data." toxic_json
       "braids" true;
-    includes_word_test "check if dance is a word in test_data." test_json
+    includes_word_test "check if dance is a word in toxic_data." toxic_json
       "dance" true;
-    includes_word_test "check if history is a word in test_data." test_json
-      "history" true;
-    includes_word_test "check if aloof is a word in test_data." test_json
-      "aloof" true;
-    includes_word_test "check if bruh is a word in test_data." test_json "bruh"
-      false;
-    includes_word_test "check if idiot is a word in test_data." test_json
-      "idiot" false;
-    includes_word_test "check if dishonesty is a word in test_data." test_json
-      "dishonesty" true;
+    includes_word_test "check if history is a word in wholesome_data."
+      wholesome_json "history" true;
+    includes_word_test "check if aloof is a word in wholesome_data."
+      wholesome_json "aloof" true;
+    includes_word_test "check if bruh is a word in wholesome_data."
+      wholesome_json "bruh" false;
+    includes_word_test "check if idiot is a word in wholesome_data."
+      wholesome_json "idiot" false;
+    includes_word_test "check if dishonesty is a word in wholesome_data."
+      wholesome_json "dishonesty" true;
   ]
 
 (*player test suite*)
@@ -506,6 +538,80 @@ let player_test =
       new_player_rando2 2000 (-4000) 1000 (-1000);
   ]
 
+(*interface test suite*)
+let player_list_cool =
+  [ new_player_liam; new_player_charlie; new_player_enjie; new_player_vin ]
+
+let one_player_list = [ new_player_vin ]
+
+let fetch_names_test (name : string) (player_lst : Player.t list)
+    (expected_output : string list) : test =
+  name >:: fun _ ->
+  assert_equal expected_output (Interface.fetch_player_names player_lst)
+
+let names_separated_test (name : string) (name_lst : string list)
+    (expected_output : string) : test =
+  name >:: fun _ ->
+  assert_equal expected_output (Interface.names_separated name_lst)
+    ~printer:(fun x -> x)
+
+let create_game_mode_test (name : string) (input : string)
+    (expected_output : Game_state.game_mode) : test =
+  name >:: fun _ ->
+  assert_equal expected_output (Interface.create_game_mode input)
+    ~printer:(fun x ->
+      match x with
+      | Game_state.Wholesome -> "Wholesome"
+      | Game_state.Toxic -> "Toxic")
+
+let create_num_players_test (name : string) (input : string)
+    (expected_output : int) : test =
+  name >:: fun _ ->
+  assert_equal expected_output
+    (Interface.create_num_players input)
+    ~printer:string_of_int
+
+(* let create_format_word_bank_test (name : string) (input : string list)
+   (expected_output : string) : test = name >:: fun _ -> assert_equal
+   expected_output (Interface.format_word_bank input) ~printer:(fun x -> x) *)
+
+let interface_test =
+  [
+    fetch_names_test "testing list of players Liam, Charlie, Enjie, Vin"
+      player_list_cool
+      [ "Liam"; "Charlie"; "Enjie"; "Vin" ];
+    fetch_names_test "testing one player list" one_player_list [ "Vin" ];
+    fetch_names_test "testing empty list" [] [];
+    names_separated_test "testing separated 4 names list"
+      [ "Liam"; "Charlie"; "Enjie"; "Vin" ]
+      "Liam, Charlie, Enjie, Vin";
+    names_separated_test "testing separating empty list" [] "";
+    names_separated_test "testing separated 2 names list" [ "Liam"; "Charlie" ]
+      "Liam and Charlie";
+    names_separated_test "testing separated 1 names list" [ "Liam" ] "Charlie";
+    create_game_mode_test "testing game mode input wholesome" "wholesome"
+      Game_state.Wholesome;
+    create_game_mode_test "testing game mode input w" "w" Game_state.Wholesome;
+    create_game_mode_test "testing game mode input W" "W" Game_state.Wholesome;
+    create_game_mode_test "testing game mode input Wholesome" "Wholesome"
+      Game_state.Wholesome;
+    create_game_mode_test "testing game mode input WHOLESOME" "WHOLESOME"
+      Game_state.Wholesome;
+    create_game_mode_test "testing game mode input whOlEsome" "whOlEsome"
+      Game_state.Wholesome;
+    create_game_mode_test "testing game mode input toxic" "toxic"
+      Game_state.Toxic;
+    create_game_mode_test "testing game mode input t" "t" Game_state.Toxic;
+    create_game_mode_test "testing game mode input T" "T" Game_state.Toxic;
+    create_game_mode_test "testing game mode input TOXIC" "TOXIC"
+      Game_state.Toxic;
+    create_game_mode_test "testing game mode input Toxic" "Toxic"
+      Game_state.Toxic;
+    create_game_mode_test "testing game mode input special" "shut the fuck up"
+      Game_state.Toxic;
+    create_num_players_test "testing num players input" "1" 1;
+    create_num_players_test "testing num players input" "99999" 99999;
+  ]
 (*game state test suite*)
 
 (* let new_game_data_test (name : string) (g_mode : Game_state.game_mode) (num_p
@@ -514,6 +620,7 @@ let player_test =
    Game_state.initialize_game g_mode num_p name_array) *)
 
 let suite =
-  "test suite for Allchat" >::: List.flatten [ algorithm_test; player_test ]
+  "test suite for Allchat"
+  >::: List.flatten [ algorithm_test; player_test; interface_test ]
 
 let _ = run_test_tt_main suite
