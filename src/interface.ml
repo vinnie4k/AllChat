@@ -66,16 +66,30 @@ let rec create_game_mode player_input =
 let rec create_num_players player_input =
   try
     let np = int_of_string player_input in
-    if np <= 0 then create_num_players (invalid_input "number of friends")
+    if np <= 0 || np > 8 then
+      create_num_players (invalid_input "number of players")
     else np
   with _ -> create_num_players (invalid_input "number")
 
 let rec create_num_rounds player_input =
   try
     let np = int_of_string player_input in
-    if np <= 0 then create_num_rounds (invalid_input "number of friends")
+    if np <= 0 || np > 8 then
+      create_num_rounds (invalid_input "number of rounds")
     else np
   with _ -> create_num_rounds (invalid_input "number")
+
+let rec ask_instructions player_input =
+  if
+    String.lowercase_ascii player_input <> "yes"
+    && String.lowercase_ascii player_input <> "no"
+  then ask_instructions (invalid_input "input")
+  else
+    try
+      if String.lowercase_ascii player_input = "yes" then true
+      else if String.lowercase_ascii player_input = "no" then false
+      else ask_instructions player_input
+    with _ -> ask_instructions (invalid_input "input")
 
 let format_word_bank bank =
   let strin = List.fold_left (fun acc word -> word ^ " | " ^ acc) "" bank in

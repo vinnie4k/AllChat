@@ -31,7 +31,7 @@ let rec consecutive_games game_data =
   in
   let num_rounds =
     Interface.create_num_rounds
-      (Interface.output_question "How many rounds do you want to play?")
+      (Interface.output_question "How many rounds do you want to play? (1 - 8)")
   in
   Interface.output_statement
     ("Welcome back to the game! "
@@ -79,11 +79,11 @@ let start_game f =
   in
   let num_players =
     Interface.create_num_players
-      (Interface.output_question "How many people are playing?")
+      (Interface.output_question "How many people are playing? (1 - 8)")
   in
   let num_rounds =
     Interface.create_num_rounds
-      (Interface.output_question "How many rounds do you want to play?")
+      (Interface.output_question "How many rounds do you want to play? (1 - 8")
   in
   let player_list = Array.make num_players (Player.new_player "|*_*|") in
   for i = 0 to num_players - 1 do
@@ -142,13 +142,44 @@ let start_game f =
 let main () =
   Interface.output_statement
     "\nWelcome to AllChat, the game where we rate your toxicity ☠️.";
-  let output =
-    Interface.output_question
-      "Please enter the name of the game file you want to load:"
+  let instructions =
+    Interface.ask_instructions
+      (Interface.output_question
+         "Would you like to view the instructions? (Yes or No)")
   in
-  match output with
-  | exception End_of_file -> ()
-  | file_name -> start_game (Interface.data_dir_prefix ^ file_name ^ ".json")
+  if instructions then (
+    Interface.output_statement
+      "There are two different game modes to choose: (1) Toxic or (2) \
+       Wholesome.\n\n\
+       The Toxic gamemode will have more negative words and will favor \
+       negativity \n\
+       whereas the Wholesome gamemode will have more positive words and will \
+       favor positivity.\n\n\
+       You can play this game with up to 8 players.\n\
+       Each player will be given a sentence with a word bank in which they \
+       will fill the sentence with the word of their choice.\n\
+       Once everybody has had a chance to enter their word into the sentence, \
+       the players can view their scores.\n\n\
+       There are different game files that you can load that are provided for \
+       you, or you can even write your own!\n\
+       You can quit anytime by typing '#quit' or by pressing CMD + C (or CTRL \
+       + C) on your keyboard to exit out of the terminal.\n\n\n\
+       May the most toxic ☠️ (or wholesome ❤️ ) person win!";
+    let output =
+      Interface.output_question
+        "Please enter the name of the game file you want to load:"
+    in
+    match output with
+    | exception End_of_file -> ()
+    | file_name -> start_game (Interface.data_dir_prefix ^ file_name ^ ".json"))
+  else
+    let output =
+      Interface.output_question
+        "Please enter the name of the game file you want to load:"
+    in
+    match output with
+    | exception End_of_file -> ()
+    | file_name -> start_game (Interface.data_dir_prefix ^ file_name ^ ".json")
 
 (* Execute the game engine. *)
 let () = main ()

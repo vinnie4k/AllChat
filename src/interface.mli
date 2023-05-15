@@ -54,6 +54,9 @@ val create_num_rounds : string -> int
 (** [create_num_rounds x] is an int created from the player's new response [x]
     after an invalid one. Continues to request input until one is valid.*)
 
+val ask_instructions : string -> bool
+(** [ask_instructions x] is true if [x] is 'Yes' or false if [x] is 'No' *)
+
 val get_player : int -> Player.t array -> Player.t
 (** [get_player n arr] is the player at index [n] in [arr] *)
 
