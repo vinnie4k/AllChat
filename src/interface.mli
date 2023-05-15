@@ -28,13 +28,31 @@ val names_separated : string list -> string
     a comma. If there are only two players, then the strings are separated by
     'and'. *)
 
+val check_valid_input : Get_data.t -> string list -> string list -> bool
+(** [check_valid_input repo input bank] is a bool that evaluates to true if the
+    users input [input] consists of words that are valid in the word repo [repo]
+    and in the given word bank [bank] *)
+
 val invalid_input : string -> string
 (** [invalid_input x] returns a string message for the previously asked question
     regarding [x] *)
 
+val create_custom_game : string -> bool
+(** [create_custom_game x] is a bool found from the player's response [x]
+    whether they wanted to input custom game rules *)
+
 val create_game_mode : string -> Game_state.game_mode
-(** [create_game_mode x] is Some Game_state.game_mode if [x] is a valid game
-    mode or None if not *)
+(** [create_game_mode x] is a Game_state.game_mode created from the player's new
+    response [x] after an invalid one. Continues to request input until one is
+    valid. *)
+
+val create_num_players : string -> int
+(** [create_num_players x] is an int created from the player's new response [x]
+    after an invalid one. Continues to request input until one is valid.*)
+
+val create_num_rounds : string -> int
+(** [create_num_rounds x] is an int created from the player's new response [x]
+    after an invalid one. Continues to request input until one is valid.*)
 
 val get_player : int -> Player.t array -> Player.t
 (** [get_player n arr] is the player at index [n] in [arr] *)
@@ -45,11 +63,6 @@ val format_word_bank : string list -> string
 
 val words_to_list : string -> string list
 (** [words_to_list x] converts [x] to a list of strings, separated by a space *)
-
-(* val process_response : string -> string list -> int -> string -> int list *)
-(* [process_response x word_bank blanks sentence] processes the user input [x]
-   and [sentence] and checks if the number of words is valid and equal to
-   [blanks], as well as if inputted words were part of the given [word_bank] *)
 
 val run_round :
   int ->
@@ -69,3 +82,7 @@ val run_round :
 val display_scoreboard : Game_state.game_data ref -> unit
 (** [display_scoreoard game] displays a formatted scoreboard of each player's
     scores in the game [game]*)
+
+val display_overall_scoreboard : Game_state.game_data ref -> unit
+(** [display_overall_scoreboard game] displays a formatted scoreboard of each
+    player's scores in the game cumulative [game] *)
